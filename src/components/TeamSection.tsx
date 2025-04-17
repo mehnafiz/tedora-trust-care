@@ -4,35 +4,35 @@ import { User } from "lucide-react";
 const TeamSection = () => {
   const team = [
     {
-      name: "MD. Nafiz Ahmed Tanim",
-      role: "CEO",
-      description: "CS Student & Lead Care Coordinator",
-      image: "/lovable-uploads/36860606-24da-4223-ad91-f141317ce276.png"
-    },
-    {
-      name: "Sayma Rahman",
-      role: "HR Head",
-      description: "Childcare Specialist & Client Relations",
-      image: "" // Placeholder
+      name: "Shafin Ahmed",
+      role: "Marketing",
+      description: "Customer Experience Strategist",
+      image: "/lovable-uploads/2742d846-9da9-4ccf-976d-8b54cd790173.png"
     },
     {
       name: "Zahin Iltamas",
       role: "Operations",
       description: "Elderly Care Logistics Expert",
-      image: "" // Placeholder
+      image: "/lovable-uploads/211ff065-3b7c-4b1b-8acd-38254c7f827b.png"
     },
     {
-      name: "Shafin Ahmed",
-      role: "Marketing",
-      description: "Customer Experience Strategist",
-      image: "" // Placeholder
+      name: "Sayma Rahman",
+      role: "HR Head",
+      description: "Childcare Specialist & Client Relations",
+      image: "/lovable-uploads/1eb0b1b7-66b9-483a-90d9-5e486566adc4.png"
     },
+    {
+      name: "MD. Nafiz Ahmed Tanim",
+      role: "CEO",
+      description: "CS Student & Lead Care Coordinator",
+      image: "/lovable-uploads/36860606-24da-4223-ad91-f141317ce276.png"
+    }
   ];
 
   return (
     <section id="team" className="py-16 bg-tedora-cream/30">
       <div className="container mx-auto px-4">
-        <h2 className="section-title">Founded by AIUB Students Who Care</h2>
+        <h2 className="section-title">Founders</h2>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {team.map((member, index) => (
@@ -64,3 +64,4 @@ const TeamSection = () => {
 };
 
 export default TeamSection;
+
