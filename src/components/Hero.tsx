@@ -27,10 +27,6 @@ const Hero = () => {
                 <Check size={16} className="text-tedora-sage" />
                 <span>First-Aid Certified</span>
               </div>
-              <div className="trust-badge">
-                <Check size={16} className="text-tedora-sage" />
-                <span>5-Star Rated by 50+ Families</span>
-              </div>
             </div>
             
             {/* CTA Buttons */}
