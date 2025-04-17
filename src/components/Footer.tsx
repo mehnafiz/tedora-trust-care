@@ -80,10 +80,6 @@ const Footer = () => {
             </div>
             
             {/* Trust Seal */}
-            <div className="p-3 bg-white/10 rounded-lg mb-6 inline-flex items-center gap-2">
-              <Award size={18} className="text-tedora-peach" />
-              <p className="text-sm text-white/90">Approved by Bangladesh Childcare Association</p>
-            </div>
             
             {/* Final CTA */}
             <div className="bg-tedora-sage text-white p-4 rounded-lg shadow-lg">
