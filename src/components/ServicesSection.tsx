@@ -31,7 +31,7 @@ const ServicesSection = () => {
     {
       name: "Weekend Package",
       timeSlot: "Fri + Sat (Hourly)",
-      price: "400/hour"
+      price: "399/hour"
     }
   ];
 
