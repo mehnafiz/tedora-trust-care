@@ -5,19 +5,19 @@ const TeamSection = () => {
   const team = [
     {
       name: "Shafin Ahmed",
-      role: "Marketing",
+      role: "CMO",
       description: "Customer Experience Strategist",
       image: "/lovable-uploads/2742d846-9da9-4ccf-976d-8b54cd790173.png"
     },
     {
       name: "Zahin Iltamas",
-      role: "Operations",
+      role: "Director",
       description: "Elderly Care Logistics Expert",
       image: "/lovable-uploads/211ff065-3b7c-4b1b-8acd-38254c7f827b.png"
     },
     {
       name: "Sayma Rahman",
-      role: "HR Head",
+      role: "Consultanted & HR Head",
       description: "Childcare Specialist & Client Relations",
       image: "/lovable-uploads/1eb0b1b7-66b9-483a-90d9-5e486566adc4.png"
     },
