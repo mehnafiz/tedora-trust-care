@@ -6,12 +6,12 @@ const ServicesSection = () => {
     {
       name: "Hourly Babysitting",
       timeSlot: "7 AM – 6 PM",
-      price: "249/hour(Minimum : 3 hours)"
+      price: "249/hour(Min: 3hr)"
     }, 
     {
       name: "Hourly Babysitting(Night)",
       timeSlot: "6 PM – 10 PM",
-      price: "299/hour(Minimum : 2 hours)"
+      price: "299/hour(Min: 2hr)"
     },
     {
       name: "Full-Day Childcare",
