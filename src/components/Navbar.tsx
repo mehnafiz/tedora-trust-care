@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Menu, Phone, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -15,7 +14,7 @@ const Navbar = () => {
             <img 
               src="/lovable-uploads/392329e6-0859-48e9-9da2-7918163f0ee5.png" 
               alt="TEDora+ Logo" 
-              className="h-12 md:h-14"
+              className="h-16 md:h-20 w-auto object-contain drop-shadow-md bg-tedora-sage/10 p-2 rounded-lg transition-all duration-300 hover:scale-105"
             />
           </a>
         </div>
