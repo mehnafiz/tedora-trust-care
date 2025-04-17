@@ -24,7 +24,7 @@ const TeamSection = () => {
     {
       name: "MD. Nafiz Ahmed Tanim",
       role: "CEO",
-      description: "CS Student & Lead Care Coordinator",
+      description: "Lead Care Coordinator",
       image: "/lovable-uploads/36860606-24da-4223-ad91-f141317ce276.png"
     }
   ];
