@@ -3,12 +3,13 @@ import { User } from "lucide-react";
 
 const TeamSection = () => {
   const team = [
-    {
-      name: "Shafin Ahmed",
-      role: "CMO",
-      description: "Customer Experience Strategist",
-      image: "/lovable-uploads/2742d846-9da9-4ccf-976d-8b54cd790173.png"
+     {
+      name: "MD. Nafiz Ahmed Tanim",
+      role: "CEO",
+      description: "Lead Care Coordinator",
+      image: "/lovable-uploads/36860606-24da-4223-ad91-f141317ce276.png"
     },
+    
     {
       name: "Zahin Iltamas",
       role: "Director",
@@ -17,16 +18,17 @@ const TeamSection = () => {
     },
     {
       name: "Sayma Rahman",
-      role: "Consultanted & HR Head",
+      role: "Consultant & HR Head",
       description: "Childcare Specialist & Client Relations",
       image: "/lovable-uploads/1eb0b1b7-66b9-483a-90d9-5e486566adc4.png"
     },
     {
-      name: "MD. Nafiz Ahmed Tanim",
-      role: "CEO",
-      description: "Lead Care Coordinator",
-      image: "/lovable-uploads/36860606-24da-4223-ad91-f141317ce276.png"
+      name: "Shafin Ahmed",
+      role: "CMO",
+      description: "Customer Experience Strategist",
+      image: "/lovable-uploads/2742d846-9da9-4ccf-976d-8b54cd790173.png"
     }
+   
   ];
 
   return (
