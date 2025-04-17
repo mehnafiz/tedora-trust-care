@@ -5,28 +5,33 @@ const ServicesSection = () => {
   const services = [
     {
       name: "Hourly Babysitting",
-      timeSlot: "7 AM – 10 PM",
-      price: "200/hour"
+      timeSlot: "7 AM – 6 PM",
+      price: "249/hour(Minimum : 3 hours)"
+    }, 
+    {
+      name: "Hourly Babysitting(Night)",
+      timeSlot: "6 PM – 10 PM",
+      price: "299/hour(Minimum : 2 hours)"
     },
     {
       name: "Full-Day Childcare",
       timeSlot: "8 AM – 6 PM",
-      price: "1,300/day"
+      price: "1,499/day"
     },
     {
       name: "Overnight Care",
       timeSlot: "10 PM – 6 AM",
-      price: "2,500/night"
+      price: "1,999/night"
     },
     {
       name: "Elderly Care (Daily)",
       timeSlot: "8 AM – 8 PM",
-      price: "1,800/day"
+      price: "1,799/day"
     },
     {
       name: "Weekend Package",
-      timeSlot: "Sat + Sun (12h/day)",
-      price: "3,500/weekend"
+      timeSlot: "Fri + Sat (Hourly)",
+      price: "400/hour"
     }
   ];
 
