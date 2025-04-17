@@ -8,8 +8,8 @@ const Navbar = () => {
   return (
     <nav className="bg-white shadow-sm sticky top-0 z-50">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-        {/* Logo */}
-        <div className="flex items-center">
+        {/* Logo and Text */}
+        <div className="flex items-center space-x-4">
           <a href="/" className="flex items-center">
             <img 
               src="/lovable-uploads/392329e6-0859-48e9-9da2-7918163f0ee5.png" 
@@ -17,6 +17,10 @@ const Navbar = () => {
               className="h-16 md:h-20 w-auto object-contain drop-shadow-md bg-tedora-sage/10 p-2 rounded-lg transition-all duration-300 hover:scale-105"
             />
           </a>
+          <div className="flex flex-col">
+            <span className="text-2xl font-bold text-tedora-sage font-playfair">TEDora+</span>
+            <span className="text-sm text-gray-600 -mt-1">Trust Everyday Care</span>
+          </div>
         </div>
         
         {/* Desktop Navigation */}
