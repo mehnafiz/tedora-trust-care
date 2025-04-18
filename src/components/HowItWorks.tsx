@@ -1,4 +1,3 @@
-
 import { Phone, UserCheck, Coffee } from "lucide-react";
 
 const HowItWorks = () => {
@@ -38,7 +37,7 @@ const HowItWorks = () => {
           {steps.map((step, index) => (
             <div 
               key={index}
-              className="group bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-lg text-center card-hover relative overflow-hidden border border-tedora-sage/10"
+              className="group bg-white/80 backdrop-blur-sm p-6 pt-16 rounded-xl shadow-lg text-center card-hover relative overflow-hidden border border-tedora-sage/10"
             >
               <div className="absolute -top-12 right-0 w-32 h-32 bg-gradient-to-br from-tedora-sage/10 to-transparent rounded-full blur-xl transform group-hover:scale-150 transition-transform duration-700"></div>
               
