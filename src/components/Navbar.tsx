@@ -20,7 +20,7 @@ const Navbar = () => {
             />
             <div className="flex flex-col">
               <span className="text-2xl font-bold text-tedora-sage font-playfair">TEDora+</span>
-              <span className="text-sm text-gray-600 -mt-1">Trust Everyday Care</span>
+              <span className="text-sm text-gray-600 -mt-1" style={{ fontFamily: 'Aladin, cursive' }}>Trust Everyday Care</span>
             </div>
           </div>
         </Link>
