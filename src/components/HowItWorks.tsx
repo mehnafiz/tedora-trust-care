@@ -1,3 +1,4 @@
+
 import { Phone, UserCheck, Coffee } from "lucide-react";
 
 const HowItWorks = () => {
@@ -20,7 +21,7 @@ const HowItWorks = () => {
   ];
 
   return (
-    <section id="how-it-works" className="py-16 pt-24 bg-gradient-to-br from-tedora-cream/50 via-white to-tedora-cream/30">
+    <section id="how-it-works" className="py-16 bg-gradient-to-br from-tedora-cream/50 via-white to-tedora-cream/30">
       <div className="container mx-auto px-4">
         <h2 className="section-title relative inline-block">
           How It Works

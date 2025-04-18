@@ -8,10 +8,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Mail } from "lucide-react";
+import { Mail, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { sendCustomerFormEmail, sendEmployeeFormEmail } from '@/utils/emailService';
 
 const customerFormSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -34,6 +35,8 @@ const employeeFormSchema = z.object({
 const Forms = () => {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("customer");
+  const [isSubmittingCustomer, setIsSubmittingCustomer] = useState(false);
+  const [isSubmittingEmployee, setIsSubmittingEmployee] = useState(false);
 
   const customerForm = useForm({
     resolver: zodResolver(customerFormSchema),
@@ -59,35 +62,79 @@ const Forms = () => {
     },
   });
 
-  const onCustomerSubmit = (data: z.infer<typeof customerFormSchema>) => {
-    // In a real application, this would send the form data to a server
-    // For now, we'll just show a success message
-    console.log("Customer form data:", data);
-    toast({
-      title: "Form submitted successfully!",
-      description: "We'll get back to you soon.",
-    });
-    customerForm.reset();
+  const onCustomerSubmit = async (data: z.infer<typeof customerFormSchema>) => {
+    setIsSubmittingCustomer(true);
+    try {
+      const success = await sendCustomerFormEmail(data);
+      
+      if (success) {
+        toast({
+          title: "Form submitted successfully!",
+          description: "We'll get back to you soon.",
+        });
+        customerForm.reset();
+      } else {
+        toast({
+          title: "Submission failed",
+          description: "Please try again or contact us directly.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error in form submission:", error);
+      toast({
+        title: "Submission error",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmittingCustomer(false);
+    }
   };
 
-  const onEmployeeSubmit = (data: z.infer<typeof employeeFormSchema>) => {
-    // In a real application, this would send the form data to a server
-    console.log("Employee form data:", data);
-    toast({
-      title: "Application submitted successfully!",
-      description: "We'll review your application and contact you soon.",
-    });
-    employeeForm.reset();
+  const onEmployeeSubmit = async (data: z.infer<typeof employeeFormSchema>) => {
+    setIsSubmittingEmployee(true);
+    try {
+      const success = await sendEmployeeFormEmail(data);
+      
+      if (success) {
+        toast({
+          title: "Application submitted successfully!",
+          description: "We'll review your application and contact you soon.",
+        });
+        employeeForm.reset();
+      } else {
+        toast({
+          title: "Submission failed",
+          description: "Please try again or contact us directly.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error in form submission:", error);
+      toast({
+        title: "Submission error",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmittingEmployee(false);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-b from-white to-tedora-cream/30">
       <Navbar />
       <div className="container mx-auto px-4 py-16">
-        <h1 className="section-title">
+        <h1 className="section-title relative inline-block">
           Join Our Community
           <div className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-tedora-sage to-tedora-peach"></div>
         </h1>
+        
+        <p className="text-center max-w-2xl mx-auto mb-10 text-gray-600">
+          Fill out the form below to request our services or join our team. We'll get back to you as soon as possible.
+          You can also contact us directly at <a href="mailto:tedora.care@gmail.com" className="text-tedora-sage hover:underline">tedora.care@gmail.com</a>.
+        </p>
 
         <Tabs defaultValue="customer" className="max-w-2xl mx-auto">
           <TabsList className="grid w-full grid-cols-2 mb-8">
@@ -184,8 +231,19 @@ const Forms = () => {
                     )}
                   />
 
-                  <Button type="submit" className="w-full bg-tedora-sage hover:bg-tedora-sage/90">
-                    Submit Request
+                  <Button 
+                    type="submit" 
+                    className="w-full bg-tedora-sage hover:bg-tedora-sage/90"
+                    disabled={isSubmittingCustomer}
+                  >
+                    {isSubmittingCustomer ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Submitting...
+                      </>
+                    ) : (
+                      <>Submit Request</>
+                    )}
                   </Button>
                 </form>
               </Form>
@@ -317,8 +375,19 @@ const Forms = () => {
                     )}
                   />
 
-                  <Button type="submit" className="w-full bg-tedora-sage hover:bg-tedora-sage/90">
-                    Submit Application
+                  <Button 
+                    type="submit" 
+                    className="w-full bg-tedora-sage hover:bg-tedora-sage/90"
+                    disabled={isSubmittingEmployee}
+                  >
+                    {isSubmittingEmployee ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Submitting...
+                      </>
+                    ) : (
+                      <>Submit Application</>
+                    )}
                   </Button>
                 </form>
               </Form>
