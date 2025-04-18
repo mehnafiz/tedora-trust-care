@@ -1,6 +1,8 @@
+
 import { useState } from "react";
 import { Menu, Phone, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -9,26 +11,26 @@ const Navbar = () => {
     <nav className="bg-white shadow-sm sticky top-0 z-50">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         {/* Logo and Text */}
-        <div className="flex items-center space-x-4">
-          <a href="/" className="flex items-center">
+        <Link to="/" className="flex items-center">
+          <div className="flex items-center space-x-4">
             <img 
               src="/lovable-uploads/392329e6-0859-48e9-9da2-7918163f0ee5.png" 
               alt="TEDora+ Logo" 
               className="h-16 md:h-20 w-auto object-contain drop-shadow-md bg-tedora-sage/10 p-2 rounded-lg transition-all duration-300 hover:scale-105"
             />
-          </a>
-          <div className="flex flex-col">
-            <span className="text-2xl font-bold text-tedora-sage font-playfair">TEDora+</span>
-            <span className="text-sm text-gray-600 -mt-1">Trust Everyday Care</span>
+            <div className="flex flex-col">
+              <span className="text-2xl font-bold text-tedora-sage font-playfair">TEDora+</span>
+              <span className="text-sm text-gray-600 -mt-1">Trust Everyday Care</span>
+            </div>
           </div>
-        </div>
+        </Link>
         
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-8">
           <a href="#services" className="text-gray-700 hover:text-tedora-sage transition-colors">Services</a>
           <a href="#how-it-works" className="text-gray-700 hover:text-tedora-sage transition-colors">How It Works</a>
           <a href="#team" className="text-gray-700 hover:text-tedora-sage transition-colors">Our Team</a>
-          <a href="#testimonials" className="text-gray-700 hover:text-tedora-sage transition-colors">Testimonials</a>
+          <Link to="/forms" className="text-gray-700 hover:text-tedora-sage transition-colors">More</Link>
           <Button className="bg-tedora-sage hover:bg-tedora-sage/90 text-white">
             <Phone size={16} className="mr-2" /> Call Now
           </Button>
@@ -70,13 +72,13 @@ const Navbar = () => {
             >
               Our Team
             </a>
-            <a 
-              href="#testimonials" 
+            <Link 
+              to="/forms"
               className="block text-gray-700 hover:text-tedora-sage"
               onClick={() => setIsMenuOpen(false)}
             >
-              Testimonials
-            </a>
+              More
+            </Link>
             <Button className="w-full bg-tedora-sage hover:bg-tedora-sage/90 text-white">
               <Phone size={16} className="mr-2" /> Call Now
             </Button>

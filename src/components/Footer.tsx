@@ -1,5 +1,5 @@
 
-import { Phone, Mail, MapPin, Facebook, Instagram, Star, MessageCircle, Award } from "lucide-react";
+import { Phone, Mail, MapPin, Facebook, Instagram, Star, MessageCircle } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -18,7 +18,10 @@ const Footer = () => {
               </li>
               <li className="flex items-center gap-3">
                 <Mail size={20} className="text-tedora-peach" />
-                <a href="mailto:tedora.care@gmail.com" className="hover:text-tedora-peach transition-colors">
+                <a 
+                  href="mailto:tedora.care@gmail.com" 
+                  className="hover:text-tedora-peach transition-colors"
+                >
                   tedora.care@gmail.com
                 </a>
               </li>
