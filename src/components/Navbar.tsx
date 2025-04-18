@@ -30,7 +30,7 @@ const Navbar = () => {
           <a href="#services" className="text-gray-700 hover:text-tedora-sage transition-colors">Services</a>
           <a href="#how-it-works" className="text-gray-700 hover:text-tedora-sage transition-colors">How It Works</a>
           <a href="#team" className="text-gray-700 hover:text-tedora-sage transition-colors">Our Team</a>
-          <Link to="/forms" className="text-gray-700 hover:text-tedora-sage transition-colors">More</Link>
+          <Link to="/forms" className="text-gray-700 hover:text-tedora-sage transition-colors">Fill-Form</Link>
           <Button className="bg-tedora-sage hover:bg-tedora-sage/90 text-white">
             <Phone size={16} className="mr-2" /> Call Now
           </Button>
@@ -77,7 +77,7 @@ const Navbar = () => {
               className="block text-gray-700 hover:text-tedora-sage"
               onClick={() => setIsMenuOpen(false)}
             >
-              More
+              Fill-Form
             </Link>
             <Button className="w-full bg-tedora-sage hover:bg-tedora-sage/90 text-white">
               <Phone size={16} className="mr-2" /> Call Now
