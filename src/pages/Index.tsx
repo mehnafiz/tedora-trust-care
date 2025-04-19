@@ -8,9 +8,25 @@ import HowItWorks from "../components/HowItWorks";
 import Testimonials from "../components/Testimonials";
 import Footer from "../components/Footer";
 import StickyCta from "../components/StickyCta";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const Index = () => {
+  // State for dynamic values
+  const [caregiverCount, setCaregiverCount] = useState<number>(3);
+  const [deadlineHour, setDeadlineHour] = useState<number>(20);
+  const [deadlineMinute, setDeadlineMinute] = useState<number>(0);
+
+  // Load saved values from localStorage
+  useEffect(() => {
+    const storedCaregiverCount = localStorage.getItem("caregiverCount");
+    const storedDeadlineHour = localStorage.getItem("deadlineHour");
+    const storedDeadlineMinute = localStorage.getItem("deadlineMinute");
+    
+    if (storedCaregiverCount) setCaregiverCount(Number(storedCaregiverCount));
+    if (storedDeadlineHour) setDeadlineHour(Number(storedDeadlineHour));
+    if (storedDeadlineMinute) setDeadlineMinute(Number(storedDeadlineMinute));
+  }, []);
+
   // Add a mobile sticky call button
   useEffect(() => {
     const handleScroll = () => {
@@ -32,7 +48,11 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <UrgencyTimer />
+      <UrgencyTimer 
+        caregiverCount={caregiverCount}
+        deadlineHour={deadlineHour}
+        deadlineMinute={deadlineMinute}
+      />
       <Navbar />
       <Hero />
       <ServicesSection />
