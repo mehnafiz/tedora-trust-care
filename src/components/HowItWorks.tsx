@@ -3,17 +3,17 @@ import { Phone, UserCheck, Coffee } from "lucide-react";
 const HowItWorks = () => {
   const steps = [
     {
-      icon: <Phone className="w-10 h-10 text-tedora-sage" />,
+      icon: <Phone className="w-8 h-8 text-tedora-sage" />,
       title: "Book",
       description: "Call/WhatsApp +8801889357506 or Fill Our Form."
     },
     {
-      icon: <UserCheck className="w-10 h-10 text-tedora-sage" />,
+      icon: <UserCheck className="w-8 h-8 text-tedora-sage" />,
       title: "Match",
       description: "We Assign a Verified Caregiver Within 2 Hours."
     },
     {
-      icon: <Coffee className="w-10 h-10 text-tedora-sage" />,
+      icon: <Coffee className="w-8 h-8 text-tedora-sage" />,
       title: "Relax",
       description: "24/7 Support – Your Family is Safe with Us."
     }
@@ -30,26 +30,21 @@ const HowItWorks = () => {
           <div className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-tedora-sage to-tedora-peach"></div>
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto relative">
-          {/* Decorative elements */}
-          <div className="absolute inset-0 -z-10">
-            <div className="absolute top-1/2 left-1/4 w-32 h-32 bg-tedora-sage/5 rounded-full blur-2xl"></div>
-            <div className="absolute bottom-1/4 right-1/4 w-40 h-40 bg-tedora-peach/5 rounded-full blur-2xl"></div>
-          </div>
-
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto mt-12">
           {steps.map((step, index) => (
             <div
               key={index}
-              className="group bg-white/80 backdrop-blur-sm p-6 pt-24 rounded-xl shadow-lg text-center card-hover relative overflow-visible border border-tedora-sage/10"
+              className="group bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-xl text-center border border-tedora-sage/10 hover:shadow-2xl transition-all duration-500"
             >
-              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-b from-white to-tedora-cream/30 w-16 h-16 rounded-full flex items-center justify-center shadow-md border-2 border-tedora-sage/20 group-hover:scale-110 transition-transform duration-300 z-10">
+              {/* Icon inside the card */}
+              <div className="mx-auto mb-6 w-16 h-16 rounded-full bg-gradient-to-br from-tedora-sage/10 to-tedora-cream/50 flex items-center justify-center shadow-md border border-tedora-sage/20 group-hover:scale-105 transition-transform duration-300">
                 {step.icon}
               </div>
 
-              <h3 className="mt-6 text-xl font-bold font-playfair text-tedora-sage group-hover:text-tedora-sage/80 transition-colors">
+              <h3 className="text-xl font-bold font-playfair text-tedora-sage mb-2 group-hover:text-tedora-sage/80 transition-colors">
                 {index + 1}. {step.title}
               </h3>
-              <p className="mt-3 text-gray-600">{step.description}</p>
+              <p className="text-gray-600 leading-relaxed">{step.description}</p>
             </div>
           ))}
         </div>
