@@ -1,7 +1,8 @@
 
 import emailjs from '@emailjs/browser';
 
-// Initialize EmailJS in the component that uses this service
+// Initialize EmailJS service
+emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY || '');
 
 export interface CustomerFormData {
   name: string;
@@ -72,8 +73,8 @@ export const sendCustomerFormEmail = async (data: CustomerFormData): Promise<boo
     const templateParams = createCustomerEmailTemplate(data);
     
     const response = await emailjs.send(
-      process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || '',
-      process.env.NEXT_PUBLIC_EMAILJS_CUSTOMER_TEMPLATE_ID || '',
+      import.meta.env.VITE_EMAILJS_SERVICE_ID || '',
+      import.meta.env.VITE_EMAILJS_CUSTOMER_TEMPLATE_ID || '',
       templateParams
     );
     
@@ -91,8 +92,8 @@ export const sendEmployeeFormEmail = async (data: EmployeeFormData): Promise<boo
     const templateParams = createEmployeeEmailTemplate(data);
     
     const response = await emailjs.send(
-      process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || '',
-      process.env.NEXT_PUBLIC_EMAILJS_EMPLOYEE_TEMPLATE_ID || '',
+      import.meta.env.VITE_EMAILJS_SERVICE_ID || '',
+      import.meta.env.VITE_EMAILJS_EMPLOYEE_TEMPLATE_ID || '',
       templateParams
     );
     
@@ -100,6 +101,37 @@ export const sendEmployeeFormEmail = async (data: EmployeeFormData): Promise<boo
     return response.status === 200;
   } catch (error) {
     console.error('Error sending employee form email:', error);
+    return false;
+  }
+};
+
+// New function for Formspree submission
+export const sendFormspreeSubmission = async (data: {
+  name: string;
+  email: string;
+  phone: string;
+  serviceType: string;
+  message: string;
+}): Promise<boolean> => {
+  try {
+    const response = await fetch('https://formspree.io/f/xknddpjk', { // Replace with your Formspree form ID
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        serviceType: data.serviceType,
+        message: data.message,
+        _redirect: `https://wa.me/${data.phone}?text=*Thanks, ${data.name}!*%0AWe'll contact you shortly.`,
+      }),
+    });
+
+    return response.ok;
+  } catch (error) {
+    console.error('Error sending Formspree submission:', error);
     return false;
   }
 };

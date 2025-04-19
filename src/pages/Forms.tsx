@@ -1,6 +1,7 @@
-
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -13,27 +14,28 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, CheckCircle } from "lucide-react";
+import { Loader2, CheckCircle, Mail, Phone, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { 
   sendCustomerFormEmail, 
   sendEmployeeFormEmail,
+  sendFormspreeSubmission,
   CustomerFormData,
   EmployeeFormData
 } from "../utils/emailService";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 // Zod schemas for form validation
 const customerFormSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
-  phone: z.string().min(8, "Please enter a valid phone number"),
+  phone: z.string().regex(/^\+8801[3-9]\d{8}$/, "Please enter a valid Bangladeshi phone number (+8801XXXXXXXXX)"),
   serviceType: z.string().min(1, "Please select a service type"),
-  message: z.string().min(10, "Message must be at least 10 characters"),
+  message: z.string().max(200, "Message cannot exceed 200 characters").refine(value => !/^c{10,}$/.test(value), {
+    message: "Invalid message content"
+  }),
   honeypot: z.string().optional(), // Honeypot field for spam protection
 });
 
@@ -55,6 +57,8 @@ const Forms = () => {
   const [showCustomerSuccess, setShowCustomerSuccess] = useState(false);
   const [showEmployeeSuccess, setShowEmployeeSuccess] = useState(false);
   const [submissionCount, setSubmissionCount] = useState(0);
+  const [whatsappRedirect, setWhatsappRedirect] = useState<string | null>(null);
+  const [countdownTimer, setCountdownTimer] = useState(5);
 
   // Customer form initialization
   const customerForm = useForm({
@@ -123,17 +127,40 @@ const Forms = () => {
       // Extract form data (exclude honeypot)
       const { honeypot, ...formData } = data;
       
-      // Send email
-      const success = await sendCustomerFormEmail(formData as CustomerFormData);
+      // Send email via EmailJS
+      const emailSuccess = await sendCustomerFormEmail(formData as CustomerFormData);
       
-      if (success) {
+      // Send to Formspree and prepare WhatsApp redirect
+      const formspreeSuccess = await sendFormspreeSubmission(formData as CustomerFormData);
+      
+      // Prepare WhatsApp redirect URL with client's phone
+      const whatsappUrl = `https://wa.me/+8801889357506?text=New%20Booking%20from%20${encodeURIComponent(formData.name)}%0APhone:%20${encodeURIComponent(formData.phone)}%0AService:%20${encodeURIComponent(formData.serviceType)}%0ADetails:%20${encodeURIComponent(formData.message || 'No details provided')}`;
+      
+      if (emailSuccess || formspreeSuccess) {
         toast({ 
           title: "Thank you!", 
-          description: "We've received your submission." 
+          description: "Submitted! Check WhatsApp." 
         });
         customerForm.reset();
         setShowCustomerSuccess(true);
-        setTimeout(() => setShowCustomerSuccess(false), 5000);
+        
+        // Set WhatsApp redirect URL and start countdown
+        setWhatsappRedirect(whatsappUrl);
+        
+        // Start countdown for redirect
+        let seconds = 5;
+        setCountdownTimer(seconds);
+        const countdownInterval = setInterval(() => {
+          seconds -= 1;
+          setCountdownTimer(seconds);
+          
+          if (seconds <= 0) {
+            clearInterval(countdownInterval);
+            // Open WhatsApp in a new tab
+            window.open(whatsappUrl, '_blank');
+            setWhatsappRedirect(null);
+          }
+        }, 1000);
         
         // Scroll to top for confirmation message
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -224,8 +251,29 @@ const Forms = () => {
           You can also contact us directly at <a href="mailto:tedora.care@gmail.com" className="text-tedora-sage hover:underline">tedora.care@gmail.com</a>.
         </p>
 
+        {/* WhatsApp Redirect Alert */}
+        {whatsappRedirect && (
+          <Alert className="mb-6 bg-green-100 border-green-500">
+            <CheckCircle className="h-5 w-5 text-green-500" />
+            <AlertTitle>Submission Successful!</AlertTitle>
+            <AlertDescription className="flex flex-col">
+              <span>Redirecting to WhatsApp in {countdownTimer} seconds...</span>
+              <Button 
+                variant="outline" 
+                className="mt-2 bg-white hover:bg-green-50 border-green-500 text-green-700"
+                onClick={() => {
+                  window.open(whatsappRedirect, '_blank');
+                  setWhatsappRedirect(null);
+                }}
+              >
+                <Send className="mr-2 h-4 w-4" /> Open WhatsApp Now
+              </Button>
+            </AlertDescription>
+          </Alert>
+        )}
+        
         {/* Success alerts */}
-        {showCustomerSuccess && (
+        {showCustomerSuccess && !whatsappRedirect && (
           <Alert className="mb-6 bg-green-50 border-tedora-sage">
             <CheckCircle className="h-5 w-5 text-tedora-sage" />
             <AlertTitle>Success!</AlertTitle>
@@ -298,7 +346,9 @@ const CustomerForm = ({ form, onSubmit, isSubmitting }) => (
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel className="flex items-center">
+                  <Mail className="mr-2 h-4 w-4 text-muted-foreground" /> Email
+                </FormLabel>
                 <FormControl>
                   <Input type="email" placeholder="your.email@example.com" {...field} />
                 </FormControl>
@@ -312,11 +362,14 @@ const CustomerForm = ({ form, onSubmit, isSubmitting }) => (
             name="phone"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Phone Number</FormLabel>
+                <FormLabel className="flex items-center">
+                  <Phone className="mr-2 h-4 w-4 text-muted-foreground" /> Phone Number
+                </FormLabel>
                 <FormControl>
-                  <Input placeholder="Your phone number" {...field} />
+                  <Input placeholder="+8801XXXXXXXXX" {...field} />
                 </FormControl>
                 <FormMessage />
+                <p className="text-xs text-muted-foreground">Format: +8801XXXXXXXXX</p>
               </FormItem>
             )}
           />
@@ -338,12 +391,10 @@ const CustomerForm = ({ form, onSubmit, isSubmitting }) => (
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="companionship">Companionship Care</SelectItem>
-                  <SelectItem value="personalcare">Personal Care</SelectItem>
-                  <SelectItem value="specializedcare">Specialized Care</SelectItem>
-                  <SelectItem value="respitecare">Respite Care</SelectItem>
-                  <SelectItem value="overnightcare">Overnight Care</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
+                  <SelectItem value="childcare">Childcare</SelectItem>
+                  <SelectItem value="elderlycare">Elderly Care</SelectItem>
+                  <SelectItem value="overnight">Overnight Care</SelectItem>
+                  <SelectItem value="weekend">Weekend Care</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -359,12 +410,16 @@ const CustomerForm = ({ form, onSubmit, isSubmitting }) => (
               <FormLabel>Additional Details</FormLabel>
               <FormControl>
                 <Textarea 
-                  placeholder="Please provide any additional information about your needs" 
+                  placeholder="Please provide any additional information about your needs (max 200 characters)" 
                   className="min-h-[120px]" 
                   {...field} 
+                  maxLength={200}
                 />
               </FormControl>
-              <FormMessage />
+              <div className="flex justify-between">
+                <FormMessage />
+                <p className="text-xs text-muted-foreground">{field.value.length}/200</p>
+              </div>
             </FormItem>
           )}
         />
@@ -383,9 +438,16 @@ const CustomerForm = ({ form, onSubmit, isSubmitting }) => (
               </FormItem>
             )}
           />
+          
+          {/* Hidden redirect field for Formspree */}
+          <input type="hidden" name="_redirect" value="https://wa.me/+8801889357506?text=BookingReceived" />
         </div>
         
-        <Button type="submit" className="w-full bg-tedora-sage hover:bg-tedora-sage/90" disabled={isSubmitting}>
+        <Button 
+          type="submit" 
+          className="w-full bg-tedora-sage hover:bg-tedora-sage/90 flex items-center justify-center" 
+          disabled={isSubmitting}
+        >
           {isSubmitting ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Sending...
@@ -404,6 +466,7 @@ const EmployeeForm = ({ form, onSubmit, isSubmitting }) => (
   <div className="bg-white p-6 rounded-lg shadow-lg border border-tedora-sage/20">
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        
         <FormField
           control={form.control}
           name="name"
