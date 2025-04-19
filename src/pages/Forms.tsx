@@ -1,297 +1,93 @@
+
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Loader2, CheckCircle, Mail, Phone, Send } from "lucide-react";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Mail } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { 
-  sendCustomerFormEmail, 
-  sendEmployeeFormEmail,
-  sendFormspreeSubmission,
-  CustomerFormData,
-  EmployeeFormData
-} from "../utils/emailService";
 
-// Zod schemas for form validation
 const customerFormSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
-  phone: z.string().regex(/^\+8801[3-9]\d{8}$/, "Please enter a valid Bangladeshi phone number (+8801XXXXXXXXX)"),
+  phone: z.string().min(8, "Please enter a valid phone number"),
   serviceType: z.string().min(1, "Please select a service type"),
-  message: z.string().max(200, "Message cannot exceed 200 characters").refine(value => !/^c{10,}$/.test(value), {
-    message: "Invalid message content"
-  }),
-  honeypot: z.string().optional(), // Honeypot field for spam protection
+  message: z.string().min(10, "Message must be at least 10 characters"),
 });
 
 const employeeFormSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
   phone: z.string().min(8, "Please enter a valid phone number"),
-  position: z.string().min(1, "Please select a position"),
   experience: z.string().min(1, "Please enter your experience"),
-  availability: z.string().min(1, "Please select your availability"),
+  position: z.string().min(1, "Please select a position"),
+  availability: z.string().min(1, "Please enter your availability"),
   message: z.string().min(10, "Message must be at least 10 characters"),
-  honeypot: z.string().optional(), // Honeypot field for spam protection
 });
 
 const Forms = () => {
   const { toast } = useToast();
-  const [isSubmittingCustomer, setIsSubmittingCustomer] = useState(false);
-  const [isSubmittingEmployee, setIsSubmittingEmployee] = useState(false);
-  const [showCustomerSuccess, setShowCustomerSuccess] = useState(false);
-  const [showEmployeeSuccess, setShowEmployeeSuccess] = useState(false);
-  const [submissionCount, setSubmissionCount] = useState(0);
-  const [whatsappRedirect, setWhatsappRedirect] = useState<string | null>(null);
-  const [countdownTimer, setCountdownTimer] = useState(5);
+  const [activeTab, setActiveTab] = useState("customer");
 
-  // Customer form initialization
   const customerForm = useForm({
     resolver: zodResolver(customerFormSchema),
-    defaultValues: { 
-      name: "", 
-      email: "", 
-      phone: "", 
-      serviceType: "", 
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      serviceType: "",
       message: "",
-      honeypot: "",
     },
   });
 
-  // Employee form initialization
   const employeeForm = useForm({
     resolver: zodResolver(employeeFormSchema),
-    defaultValues: { 
-      name: "", 
-      email: "", 
-      phone: "", 
-      position: "", 
-      experience: "", 
-      availability: "", 
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      experience: "",
+      position: "",
+      availability: "",
       message: "",
-      honeypot: "", 
     },
   });
 
-  // Check if rate limit is exceeded
-  const checkRateLimit = () => {
-    // Increment submission count
-    const newCount = submissionCount + 1;
-    setSubmissionCount(newCount);
-    
-    // Rate limiting logic (max 3 submissions per hour)
-    if (newCount > 3) {
-      toast({
-        title: "Too many submissions",
-        description: "Please try again later or contact us directly.",
-        variant: "destructive",
-      });
-      return false;
-    }
-    return true;
+  const onCustomerSubmit = (data: z.infer<typeof customerFormSchema>) => {
+    // In a real application, this would send the form data to a server
+    // For now, we'll just show a success message
+    console.log("Customer form data:", data);
+    toast({
+      title: "Form submitted successfully!",
+      description: "We'll get back to you soon.",
+    });
+    customerForm.reset();
   };
 
-  // Customer form submit handler
-  const onCustomerSubmit = async (data) => {
-    try {
-      // Check honeypot field (if filled, likely a bot)
-      if (data.honeypot) {
-        console.log("Spam submission detected");
-        toast({ 
-          title: "Success!", 
-          description: "Your request has been submitted." 
-        });
-        return;
-      }
-
-      // Check rate limit
-      if (!checkRateLimit()) return;
-
-      setIsSubmittingCustomer(true);
-      
-      // Extract form data (exclude honeypot)
-      const { honeypot, ...formData } = data;
-      
-      // Send email via EmailJS
-      const emailSuccess = await sendCustomerFormEmail(formData as CustomerFormData);
-      
-      // Send to Formspree and prepare WhatsApp redirect
-      const formspreeSuccess = await sendFormspreeSubmission(formData as CustomerFormData);
-      
-      // Prepare WhatsApp redirect URL with client's phone
-      const whatsappUrl = `https://wa.me/+8801889357506?text=New%20Booking%20from%20${encodeURIComponent(formData.name)}%0APhone:%20${encodeURIComponent(formData.phone)}%0AService:%20${encodeURIComponent(formData.serviceType)}%0ADetails:%20${encodeURIComponent(formData.message || 'No details provided')}`;
-      
-      if (emailSuccess || formspreeSuccess) {
-        toast({ 
-          title: "Thank you!", 
-          description: "Submitted! Check WhatsApp." 
-        });
-        customerForm.reset();
-        setShowCustomerSuccess(true);
-        
-        // Set WhatsApp redirect URL and start countdown
-        setWhatsappRedirect(whatsappUrl);
-        
-        // Start countdown for redirect
-        let seconds = 5;
-        setCountdownTimer(seconds);
-        const countdownInterval = setInterval(() => {
-          seconds -= 1;
-          setCountdownTimer(seconds);
-          
-          if (seconds <= 0) {
-            clearInterval(countdownInterval);
-            // Open WhatsApp in a new tab
-            window.open(whatsappUrl, '_blank');
-            setWhatsappRedirect(null);
-          }
-        }, 1000);
-        
-        // Scroll to top for confirmation message
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else {
-        toast({ 
-          title: "Error", 
-          description: "Submission failed. Please try again or contact us directly.", 
-          variant: "destructive" 
-        });
-      }
-    } catch (error) {
-      console.error('Form submission error:', error);
-      toast({ 
-        title: "Error", 
-        description: "Submission failed. Please try again or contact us directly.", 
-        variant: "destructive" 
-      });
-    } finally {
-      setIsSubmittingCustomer(false);
-    }
-  };
-
-  // Employee form submit handler
-  const onEmployeeSubmit = async (data) => {
-    try {
-      // Check honeypot field (if filled, likely a bot)
-      if (data.honeypot) {
-        console.log("Spam submission detected");
-        toast({ 
-          title: "Success!", 
-          description: "Your application has been submitted." 
-        });
-        return;
-      }
-
-      // Check rate limit
-      if (!checkRateLimit()) return;
-
-      setIsSubmittingEmployee(true);
-      
-      // Extract form data (exclude honeypot)
-      const { honeypot, ...formData } = data;
-      
-      // Send email
-      const success = await sendEmployeeFormEmail(formData as EmployeeFormData);
-      
-      if (success) {
-        toast({ 
-          title: "Thank you!", 
-          description: "We've received your application." 
-        });
-        employeeForm.reset();
-        setShowEmployeeSuccess(true);
-        setTimeout(() => setShowEmployeeSuccess(false), 5000);
-        
-        // Scroll to top for confirmation message
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else {
-        toast({ 
-          title: "Error", 
-          description: "Submission failed. Please try again or contact us directly.", 
-          variant: "destructive" 
-        });
-      }
-    } catch (error) {
-      console.error('Form submission error:', error);
-      toast({ 
-        title: "Error", 
-        description: "Submission failed. Please try again or contact us directly.", 
-        variant: "destructive" 
-      });
-    } finally {
-      setIsSubmittingEmployee(false);
-    }
+  const onEmployeeSubmit = (data: z.infer<typeof employeeFormSchema>) => {
+    // In a real application, this would send the form data to a server
+    console.log("Employee form data:", data);
+    toast({
+      title: "Application submitted successfully!",
+      description: "We'll review your application and contact you soon.",
+    });
+    employeeForm.reset();
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-tedora-cream/30">
+    <div className="min-h-screen bg-white">
       <Navbar />
       <div className="container mx-auto px-4 py-16">
-        <h1 className="section-title relative inline-block text-3xl font-bold font-playfair text-tedora-sage mb-8">
+        <h1 className="section-title">
           Join Our Community
           <div className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-tedora-sage to-tedora-peach"></div>
         </h1>
-        
-        <p className="text-center max-w-2xl mx-auto mb-10 text-gray-600">
-          Fill out the form below to request our services or join our team. We'll get back to you as soon as possible.
-          You can also contact us directly at <a href="mailto:tedora.care@gmail.com" className="text-tedora-sage hover:underline">tedora.care@gmail.com</a>.
-        </p>
-
-        {/* WhatsApp Redirect Alert */}
-        {whatsappRedirect && (
-          <Alert className="mb-6 bg-green-100 border-green-500">
-            <CheckCircle className="h-5 w-5 text-green-500" />
-            <AlertTitle>Submission Successful!</AlertTitle>
-            <AlertDescription className="flex flex-col">
-              <span>Redirecting to WhatsApp in {countdownTimer} seconds...</span>
-              <Button 
-                variant="outline" 
-                className="mt-2 bg-white hover:bg-green-50 border-green-500 text-green-700"
-                onClick={() => {
-                  window.open(whatsappRedirect, '_blank');
-                  setWhatsappRedirect(null);
-                }}
-              >
-                <Send className="mr-2 h-4 w-4" /> Open WhatsApp Now
-              </Button>
-            </AlertDescription>
-          </Alert>
-        )}
-        
-        {/* Success alerts */}
-        {showCustomerSuccess && !whatsappRedirect && (
-          <Alert className="mb-6 bg-green-50 border-tedora-sage">
-            <CheckCircle className="h-5 w-5 text-tedora-sage" />
-            <AlertTitle>Success!</AlertTitle>
-            <AlertDescription>
-              Your service request has been submitted. We'll contact you shortly.
-            </AlertDescription>
-          </Alert>
-        )}
-        
-        {showEmployeeSuccess && (
-          <Alert className="mb-6 bg-green-50 border-tedora-sage">
-            <CheckCircle className="h-5 w-5 text-tedora-sage" />
-            <AlertTitle>Success!</AlertTitle>
-            <AlertDescription>
-              Your application has been submitted. Our team will review it and get back to you soon.
-            </AlertDescription>
-          </Alert>
-        )}
 
         <Tabs defaultValue="customer" className="max-w-2xl mx-auto">
           <TabsList className="grid w-full grid-cols-2 mb-8">
@@ -299,20 +95,234 @@ const Forms = () => {
             <TabsTrigger value="employee">Join Our Team</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="customer">
-            <CustomerForm 
-              form={customerForm} 
-              onSubmit={onCustomerSubmit} 
-              isSubmitting={isSubmittingCustomer} 
-            />
+          <TabsContent value="customer" className="space-y-8">
+            <div className="bg-white p-6 rounded-lg shadow-lg border border-tedora-sage/20">
+              <Form {...customerForm}>
+                <form onSubmit={customerForm.handleSubmit(onCustomerSubmit)} className="space-y-6">
+                  <FormField
+                    control={customerForm.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Full Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter your name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={customerForm.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <Input type="email" placeholder="your@email.com" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={customerForm.control}
+                      name="phone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Phone Number</FormLabel>
+                          <FormControl>
+                            <Input placeholder="+880 XXX XXX XXX" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <FormField
+                    control={customerForm.control}
+                    name="serviceType"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Service Type</FormLabel>
+                        <FormControl>
+                          <select
+                            {...field}
+                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                          >
+                            <option value="">Select a service</option>
+                            <option value="babysitting">Babysitting</option>
+                            <option value="elderly">Elderly Care</option>
+                            <option value="fullday">Full-day Care</option>
+                            <option value="overnight">Overnight Care</option>
+                          </select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={customerForm.control}
+                    name="message"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Additional Details</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Please provide any additional information..."
+                            className="min-h-[100px]"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <Button type="submit" className="w-full bg-tedora-sage hover:bg-tedora-sage/90">
+                    Submit Request
+                  </Button>
+                </form>
+              </Form>
+            </div>
           </TabsContent>
 
-          <TabsContent value="employee">
-            <EmployeeForm 
-              form={employeeForm} 
-              onSubmit={onEmployeeSubmit} 
-              isSubmitting={isSubmittingEmployee} 
-            />
+          <TabsContent value="employee" className="space-y-8">
+            <div className="bg-white p-6 rounded-lg shadow-lg border border-tedora-sage/20">
+              <Form {...employeeForm}>
+                <form onSubmit={employeeForm.handleSubmit(onEmployeeSubmit)} className="space-y-6">
+                  <FormField
+                    control={employeeForm.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Full Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter your name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={employeeForm.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <Input type="email" placeholder="your@email.com" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={employeeForm.control}
+                      name="phone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Phone Number</FormLabel>
+                          <FormControl>
+                            <Input placeholder="+880 XXX XXX XXX" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <FormField
+                    control={employeeForm.control}
+                    name="position"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Position</FormLabel>
+                        <FormControl>
+                          <select
+                            {...field}
+                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                          >
+                            <option value="">Select a position</option>
+                            <option value="babysitter">Babysitter</option>
+                            <option value="elderlycare">Elderly Caregiver</option>
+                            <option value="nurse">Nurse</option>
+                          </select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={employeeForm.control}
+                    name="experience"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Years of Experience</FormLabel>
+                        <FormControl>
+                          <Input type="number" placeholder="Years of experience" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={employeeForm.control}
+                    name="availability"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Availability</FormLabel>
+                        <FormControl>
+                          <select
+                            {...field}
+                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                          >
+                            <option value="">Select availability</option>
+                            <option value="fulltime">Full Time</option>
+                            <option value="parttime">Part Time</option>
+                            <option value="weekend">Weekends Only</option>
+                            <option value="flexible">Flexible</option>
+                          </select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={employeeForm.control}
+                    name="message"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Tell us about yourself</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Share your experience and why you'd like to join our team..."
+                            className="min-h-[100px]"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <Button type="submit" className="w-full bg-tedora-sage hover:bg-tedora-sage/90">
+                    Submit Application
+                  </Button>
+                </form>
+              </Form>
+            </div>
           </TabsContent>
         </Tabs>
       </div>
@@ -320,328 +330,5 @@ const Forms = () => {
     </div>
   );
 };
-
-// Customer Form Component
-const CustomerForm = ({ form, onSubmit, isSubmitting }) => (
-  <div className="bg-white p-6 rounded-lg shadow-lg border border-tedora-sage/20">
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input placeholder="Your full name" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="flex items-center">
-                  <Mail className="mr-2 h-4 w-4 text-muted-foreground" /> Email
-                </FormLabel>
-                <FormControl>
-                  <Input type="email" placeholder="your.email@example.com" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="phone"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="flex items-center">
-                  <Phone className="mr-2 h-4 w-4 text-muted-foreground" /> Phone Number
-                </FormLabel>
-                <FormControl>
-                  <Input placeholder="+8801XXXXXXXXX" {...field} />
-                </FormControl>
-                <FormMessage />
-                <p className="text-xs text-muted-foreground">Format: +8801XXXXXXXXX</p>
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <FormField
-          control={form.control}
-          name="serviceType"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Service Type</FormLabel>
-              <Select 
-                onValueChange={field.onChange} 
-                defaultValue={field.value}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a service type" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="childcare">Childcare</SelectItem>
-                  <SelectItem value="elderlycare">Elderly Care</SelectItem>
-                  <SelectItem value="overnight">Overnight Care</SelectItem>
-                  <SelectItem value="weekend">Weekend Care</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="message"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Additional Details</FormLabel>
-              <FormControl>
-                <Textarea 
-                  placeholder="Please provide any additional information about your needs (max 200 characters)" 
-                  className="min-h-[120px]" 
-                  {...field} 
-                  maxLength={200}
-                />
-              </FormControl>
-              <div className="flex justify-between">
-                <FormMessage />
-                <p className="text-xs text-muted-foreground">{field.value.length}/200</p>
-              </div>
-            </FormItem>
-          )}
-        />
-
-        {/* Honeypot field - hidden from users but bots will fill it out */}
-        <div className="hidden">
-          <FormField
-            control={form.control}
-            name="honeypot"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Leave this empty</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          
-          {/* Hidden redirect field for Formspree */}
-          <input type="hidden" name="_redirect" value="https://wa.me/+8801889357506?text=BookingReceived" />
-        </div>
-        
-        <Button 
-          type="submit" 
-          className="w-full bg-tedora-sage hover:bg-tedora-sage/90 flex items-center justify-center" 
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Sending...
-            </>
-          ) : (
-            <>Submit Request</>
-          )}
-        </Button>
-      </form>
-    </Form>
-  </div>
-);
-
-// Employee Form Component
-const EmployeeForm = ({ form, onSubmit, isSubmitting }) => (
-  <div className="bg-white p-6 rounded-lg shadow-lg border border-tedora-sage/20">
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input placeholder="Your full name" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input type="email" placeholder="your.email@example.com" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="phone"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Phone Number</FormLabel>
-                <FormControl>
-                  <Input placeholder="Your phone number" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <FormField
-          control={form.control}
-          name="position"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Position</FormLabel>
-              <Select 
-                onValueChange={field.onChange} 
-                defaultValue={field.value}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a position" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="caregiver">Caregiver</SelectItem>
-                  <SelectItem value="nurse">Nurse</SelectItem>
-                  <SelectItem value="coordinator">Care Coordinator</SelectItem>
-                  <SelectItem value="supervisor">Supervisor</SelectItem>
-                  <SelectItem value="administrative">Administrative</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="experience"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Experience</FormLabel>
-              <Select 
-                onValueChange={field.onChange} 
-                defaultValue={field.value}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select your experience level" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="entry">Entry level (0-1 years)</SelectItem>
-                  <SelectItem value="junior">Junior (1-3 years)</SelectItem>
-                  <SelectItem value="midlevel">Mid-level (3-5 years)</SelectItem>
-                  <SelectItem value="senior">Senior (5+ years)</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="availability"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Availability</FormLabel>
-              <Select 
-                onValueChange={field.onChange} 
-                defaultValue={field.value}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select your availability" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="fulltime">Full-time</SelectItem>
-                  <SelectItem value="parttime">Part-time</SelectItem>
-                  <SelectItem value="weekends">Weekends only</SelectItem>
-                  <SelectItem value="evenings">Evenings</SelectItem>
-                  <SelectItem value="overnight">Overnight</SelectItem>
-                  <SelectItem value="flexible">Flexible</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="message"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Personal Message</FormLabel>
-              <FormControl>
-                <Textarea 
-                  placeholder="Tell us a bit about yourself and why you're interested in joining our team" 
-                  className="min-h-[120px]" 
-                  {...field} 
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
-        {/* Honeypot field - hidden from users but bots will fill it out */}
-        <div className="hidden">
-          <FormField
-            control={form.control}
-            name="honeypot"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Leave this empty</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-        </div>
-        
-        <Button type="submit" className="w-full bg-tedora-sage hover:bg-tedora-sage/90" disabled={isSubmitting}>
-          {isSubmitting ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Sending...
-            </>
-          ) : (
-            <>Submit Application</>
-          )}
-        </Button>
-      </form>
-    </Form>
-  </div>
-);
 
 export default Forms;
