@@ -24,6 +24,107 @@ export type Database = {
         }
         Relationships: []
       }
+      caregivers: {
+        Row: {
+          availability: boolean | null
+          created_at: string
+          experience: string
+          id: string
+          name: string
+          specialization: string
+        }
+        Insert: {
+          availability?: boolean | null
+          created_at?: string
+          experience: string
+          id?: string
+          name: string
+          specialization: string
+        }
+        Update: {
+          availability?: boolean | null
+          created_at?: string
+          experience?: string
+          id?: string
+          name?: string
+          specialization?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          address: string | null
+          created_at: string
+          id: string
+          name: string
+          phone: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          id: string
+          name: string
+          phone: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          phone?: string
+        }
+        Relationships: []
+      }
+      service_requests: {
+        Row: {
+          address: string
+          care_type: string
+          caregiver_id: string | null
+          created_at: string
+          duration_hours: number
+          id: string
+          notes: string | null
+          service_type: string
+          start_time: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          address: string
+          care_type: string
+          caregiver_id?: string | null
+          created_at?: string
+          duration_hours: number
+          id?: string
+          notes?: string | null
+          service_type: string
+          start_time: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          address?: string
+          care_type?: string
+          caregiver_id?: string | null
+          created_at?: string
+          duration_hours?: number
+          id?: string
+          notes?: string | null
+          service_type?: string
+          start_time?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_requests_caregiver_id_fkey"
+            columns: ["caregiver_id"]
+            isOneToOne: false
+            referencedRelation: "caregivers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

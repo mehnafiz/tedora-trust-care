@@ -6,12 +6,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
-import { Doctor3D } from "@/components/Doctor3D";
 import { motion } from "framer-motion";
+import { supabase } from "@/integrations/supabase/client";
 
 const LoginPortal = () => {
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const [isSignup, setIsSignup] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -40,8 +41,9 @@ const LoginPortal = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
     
     // Validate phone number format
     const phoneRegex = /^\+8801[3-9]\d{8}$/;
@@ -51,42 +53,56 @@ const LoginPortal = () => {
         description: "Please enter a valid Bangladeshi phone number (+8801XXXXXXXXX)",
         variant: "destructive",
       });
+      setIsLoading(false);
       return;
     }
 
-    // Simple mock authentication
-    if (selectedRole === "client") {
-      // For client, simulate OTP sent
-      toast({
-        title: "OTP Sent",
-        description: "A verification code has been sent to your WhatsApp/SMS",
-      });
-      
-      // Mock successful authentication after 2 seconds
-      setTimeout(() => {
-        localStorage.setItem("tedora_user", JSON.stringify({
-          role: "client",
-          name: formData.name,
-          phone: formData.phone,
-        }));
-        navigate("/dashboard");
-      }, 2000);
-    } else {
-      // For caregivers, check if admin-approved
-      if (formData.email === "employee@tedora.com" && formData.password === "tedora2024") {
-        localStorage.setItem("tedora_user", JSON.stringify({
-          role: "caregiver",
-          name: "Team Member",
-          phone: formData.phone,
-        }));
-        navigate("/dashboard");
-      } else {
-        toast({
-          title: "Access Denied",
-          description: "Please contact admin for approved credentials",
-          variant: "destructive",
+    try {
+      if (isSignup) {
+        // Sign up new user
+        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+          email: formData.email,
+          password: formData.password,
+          options: {
+            data: {
+              name: formData.name,
+              phone: formData.phone,
+              address: formData.address,
+            },
+          },
         });
+
+        if (signUpError) throw signUpError;
+
+        toast({
+          title: "Account created successfully!",
+          description: "Please check your email to verify your account.",
+        });
+
+      } else {
+        // Sign in existing user
+        const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+          email: formData.email,
+          password: formData.password,
+        });
+
+        if (signInError) throw signInError;
+
+        toast({
+          title: "Welcome back!",
+          description: "You have been successfully logged in.",
+        });
+
+        navigate("/dashboard");
       }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -147,109 +163,90 @@ const LoginPortal = () => {
               </button>
             </div>
 
-            {/* 3D Animation for Client Flow */}
-            {selectedRole === "client" && (
-              <div className="absolute right-10 top-40 hidden lg:block">
-                <Doctor3D />
-                <div className="mt-2 bg-white/80 backdrop-blur-md p-2 rounded-lg shadow-md text-center text-sm">
-                  <p>Hi! I'm Dr. Tania, your care advisor.</p>
-                </div>
-              </div>
-            )}
-
             <form onSubmit={handleSubmit} className="space-y-4">
-              {selectedRole === "client" && (
+              {isSignup && (
                 <>
-                  {isSignup && (
-                    <>
-                      <div>
-                        <Label htmlFor="name">Full Name</Label>
-                        <Input 
-                          id="name" 
-                          name="name" 
-                          placeholder="Your name" 
-                          value={formData.name}
-                          onChange={handleInputChange}
-                          required={isSignup}
-                          className="mt-1"
-                        />
-                      </div>
-
-                      <div>
-                        <Label htmlFor="address">Area</Label>
-                        <Select onValueChange={handleAddressChange}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select your area" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="gulshan">Gulshan</SelectItem>
-                            <SelectItem value="banani">Banani</SelectItem>
-                            <SelectItem value="dhanmondi">Dhanmondi</SelectItem>
-                            <SelectItem value="bashundhara">Bashundhara</SelectItem>
-                            <SelectItem value="uttara">Uttara</SelectItem>
-                            <SelectItem value="other">Other</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </>
-                  )}
-
                   <div>
-                    <Label htmlFor="phone">Phone Number</Label>
+                    <Label htmlFor="name">Full Name</Label>
                     <Input 
-                      id="phone" 
-                      name="phone" 
-                      placeholder="+8801772322383" 
-                      value={formData.phone}
+                      id="name" 
+                      name="name" 
+                      placeholder="Your name" 
+                      value={formData.name}
                       onChange={handleInputChange}
-                      required
+                      required={isSignup}
                       className="mt-1"
                     />
-                    <p className="text-xs text-gray-500 mt-1">Format: +8801XXXXXXXXX</p>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="address">Area</Label>
+                    <Select onValueChange={handleAddressChange}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select your area" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="gulshan">Gulshan</SelectItem>
+                        <SelectItem value="banani">Banani</SelectItem>
+                        <SelectItem value="dhanmondi">Dhanmondi</SelectItem>
+                        <SelectItem value="bashundhara">Bashundhara</SelectItem>
+                        <SelectItem value="uttara">Uttara</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </>
               )}
 
-              {selectedRole === "caregiver" && (
-                <>
-                  <div>
-                    <Label htmlFor="email">Email</Label>
-                    <Input 
-                      id="email" 
-                      name="email" 
-                      type="email"
-                      placeholder="employee@tedora.com" 
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      required
-                      className="mt-1"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="password">Password</Label>
-                    <Input 
-                      id="password" 
-                      name="password" 
-                      type="password"
-                      placeholder="••••••••" 
-                      value={formData.password}
-                      onChange={handleInputChange}
-                      required
-                      className="mt-1"
-                    />
-                  </div>
-                </>
-              )}
+              <div>
+                <Label htmlFor="phone">Phone Number</Label>
+                <Input 
+                  id="phone" 
+                  name="phone" 
+                  placeholder="+8801772322383" 
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  required
+                  className="mt-1"
+                />
+                <p className="text-xs text-gray-500 mt-1">Format: +8801XXXXXXXXX</p>
+              </div>
+
+              <div>
+                <Label htmlFor="email">Email</Label>
+                <Input 
+                  id="email" 
+                  name="email" 
+                  type="email"
+                  placeholder="your@email.com" 
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required
+                  className="mt-1"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="password">Password</Label>
+                <Input 
+                  id="password" 
+                  name="password" 
+                  type="password"
+                  placeholder="••••••••" 
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  required
+                  className="mt-1"
+                />
+              </div>
 
               <div className="pt-4">
                 <Button 
                   type="submit" 
                   className="w-full bg-[#6BA8A9] hover:bg-[#6BA8A9]/90 text-white"
+                  disabled={isLoading}
                 >
-                  {selectedRole === "client" 
-                    ? (isSignup ? "Create Account" : "Send OTP") 
-                    : "Login"
-                  }
+                  {isLoading ? "Processing..." : (isSignup ? "Create Account" : "Login")}
                 </Button>
               </div>
             </form>

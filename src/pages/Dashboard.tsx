@@ -6,6 +6,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { UserCheck, LogOut, Calendar, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/components/ui/use-toast';
 
 interface User {
   role: string;
@@ -13,21 +15,96 @@ interface User {
   phone: string;
 }
 
+interface CaregiverStats {
+  total: number;
+  available: number;
+  booked: number;
+}
+
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [user, setUser] = useState<User | null>(null);
+  const [stats, setStats] = useState<CaregiverStats>({
+    total: 0,
+    available: 0,
+    booked: 0
+  });
+  const [serviceRequests, setServiceRequests] = useState<any[]>([]);
   
   useEffect(() => {
-    const storedUser = localStorage.getItem('tedora_user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    } else {
-      navigate('/login');
-    }
+    const checkUser = async () => {
+      const { data: { session }, error } = await supabase.auth.getSession();
+      if (error || !session) {
+        navigate('/login');
+        return;
+      }
+
+      // Fetch user profile
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', session.user.id)
+        .single();
+
+      if (profileError) {
+        console.error('Error fetching profile:', profileError);
+        return;
+      }
+
+      setUser(profile);
+    };
+
+    const fetchStats = async () => {
+      // Fetch caregiver stats
+      const { data: caregivers, error: caregiverError } = await supabase
+        .from('caregivers')
+        .select('*');
+
+      if (caregiverError) {
+        console.error('Error fetching caregivers:', caregiverError);
+        return;
+      }
+
+      const available = caregivers?.filter(c => c.availability).length || 0;
+      setStats({
+        total: caregivers?.length || 0,
+        available: available,
+        booked: (caregivers?.length || 0) - available
+      });
+    };
+
+    const fetchServiceRequests = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+
+      const { data: requests, error } = await supabase
+        .from('service_requests')
+        .select(`
+          *,
+          caregivers (
+            name,
+            specialization
+          )
+        `)
+        .eq('user_id', session.user.id)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching service requests:', error);
+        return;
+      }
+
+      setServiceRequests(requests || []);
+    };
+
+    checkUser();
+    fetchStats();
+    fetchServiceRequests();
   }, [navigate]);
 
-  const handleLogout = () => {
-    localStorage.removeItem('tedora_user');
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
     navigate('/login');
   };
 
@@ -86,142 +163,81 @@ const Dashboard = () => {
           </Button>
         </div>
         
-        {/* Welcome Card */}
+        {/* Welcome Card with Stats */}
         <Card className="mb-6 bg-white/90 backdrop-blur-sm border border-[#6BA8A9]/20">
           <CardHeader>
             <CardTitle className="text-2xl font-montserrat">Welcome, {user.name}!</CardTitle>
             <CardDescription>
-              {user.role === 'client' 
-                ? 'Manage your care services and bookings' 
-                : 'Access your caregiver assignments and schedule'}
+              Current Caregiver Availability Status
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center gap-4">
-              <div className="bg-[#6BA8A9]/20 p-3 rounded-full">
-                <UserCheck size={24} className="text-[#6BA8A9]" />
+            <div className="grid grid-cols-3 gap-4 mt-4">
+              <div className="text-center p-4 bg-[#6BA8A9]/10 rounded-lg">
+                <p className="text-2xl font-bold text-[#6BA8A9]">{stats.total}</p>
+                <p className="text-sm text-gray-600">Total Caregivers</p>
               </div>
-              <div>
-                <p className="font-medium">{user.role === 'client' ? 'Family Account' : 'Caregiver Account'}</p>
-                <p className="text-sm text-gray-500">{user.phone}</p>
+              <div className="text-center p-4 bg-green-100 rounded-lg">
+                <p className="text-2xl font-bold text-green-600">{stats.available}</p>
+                <p className="text-sm text-gray-600">Available Now</p>
+              </div>
+              <div className="text-center p-4 bg-orange-100 rounded-lg">
+                <p className="text-2xl font-bold text-orange-600">{stats.booked}</p>
+                <p className="text-sm text-gray-600">Currently Booked</p>
               </div>
             </div>
           </CardContent>
         </Card>
-        
-        {user.role === 'client' ? (
-          <>
-            {/* Service Booking for Clients */}
-            <h2 className="text-xl font-montserrat font-bold mb-4">Book a Service</h2>
-            <div className="bg-white/90 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg border border-[#6BA8A9]/20 mb-6">
+
+        {/* Service Requests Section */}
+        <div className="space-y-6">
+          <h2 className="text-xl font-montserrat font-bold">Your Service Requests</h2>
+          {serviceRequests.length > 0 ? (
+            <div className="bg-white/90 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg border border-[#6BA8A9]/20">
               <Table>
-                <TableHeader className="bg-[#6BA8A9] text-white">
+                <TableHeader>
                   <TableRow>
-                    <TableHead>Service</TableHead>
-                    <TableHead>Time Slot</TableHead>
-                    <TableHead>Price (৳)</TableHead>
-                    <TableHead className="text-right">Book</TableHead>
+                    <TableHead>Service Type</TableHead>
+                    <TableHead>Care Type</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Start Time</TableHead>
+                    <TableHead>Duration</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {services.map((service, index) => (
-                    <TableRow 
-                      key={index} 
-                      className="transition-all hover:bg-[#FF9E7D]/10"
-                    >
-                      <TableCell className="font-medium">{service.name}</TableCell>
-                      <TableCell>{service.timeSlot}</TableCell>
-                      <TableCell>{service.price}</TableCell>
-                      <TableCell className="text-right">
-                        <Button size="sm" variant="ghost">
-                          <Calendar size={18} />
-                        </Button>
+                  {serviceRequests.map((request) => (
+                    <TableRow key={request.id}>
+                      <TableCell>{request.service_type}</TableCell>
+                      <TableCell className="capitalize">{request.care_type}</TableCell>
+                      <TableCell>
+                        <span className={`px-2 py-1 rounded-full text-xs ${
+                          request.status === 'approved' ? 'bg-green-100 text-green-800' :
+                          request.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                          request.status === 'completed' ? 'bg-blue-100 text-blue-800' :
+                          'bg-red-100 text-red-800'
+                        }`}>
+                          {request.status}
+                        </span>
                       </TableCell>
+                      <TableCell>{new Date(request.start_time).toLocaleString()}</TableCell>
+                      <TableCell>{request.duration_hours} hours</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
             </div>
-            
-            {/* Previous Bookings */}
-            <h2 className="text-xl font-montserrat font-bold mb-4">Your Bookings</h2>
+          ) : (
             <Card className="bg-white/90 backdrop-blur-sm border border-[#6BA8A9]/20">
               <CardContent className="pt-6">
                 <div className="text-center py-8">
                   <Clock className="mx-auto text-gray-400 mb-2" size={32} />
-                  <p className="text-gray-500">No bookings found</p>
+                  <p className="text-gray-500">No service requests found</p>
                   <Button className="mt-4 bg-[#FF9E7D] hover:bg-[#FF9E7D]/90">Book Your First Service</Button>
                 </div>
               </CardContent>
             </Card>
-          </>
-        ) : (
-          <>
-            {/* Caregiver Schedule */}
-            <h2 className="text-xl font-montserrat font-bold mb-4">Your Assignments</h2>
-            <Card className="bg-white/90 backdrop-blur-sm border border-[#6BA8A9]/20 mb-6">
-              <CardContent className="pt-6">
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center p-4 bg-[#6BA8A9]/10 rounded-lg">
-                    <div>
-                      <p className="font-medium">Elderly Care</p>
-                      <p className="text-sm text-gray-600">Gulshan, Dhaka</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-[#6BA8A9] font-medium">Apr 24, 2025</p>
-                      <p className="text-sm">8:00 AM - 8:00 PM</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex justify-between items-center p-4 bg-[#6BA8A9]/10 rounded-lg">
-                    <div>
-                      <p className="font-medium">Overnight Care</p>
-                      <p className="text-sm text-gray-600">Banani, Dhaka</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-[#6BA8A9] font-medium">Apr 25, 2025</p>
-                      <p className="text-sm">10:00 PM - 6:00 AM</p>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button variant="outline" className="w-full">View Full Schedule</Button>
-              </CardFooter>
-            </Card>
-            
-            {/* Caregiver Stats */}
-            <h2 className="text-xl font-montserrat font-bold mb-4">Performance</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Card className="bg-white/90 backdrop-blur-sm border border-[#6BA8A9]/20">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-normal text-gray-500">Completed Services</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-3xl font-bold">24</p>
-                </CardContent>
-              </Card>
-              
-              <Card className="bg-white/90 backdrop-blur-sm border border-[#6BA8A9]/20">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-normal text-gray-500">Client Rating</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-3xl font-bold">4.8/5</p>
-                </CardContent>
-              </Card>
-              
-              <Card className="bg-white/90 backdrop-blur-sm border border-[#6BA8A9]/20">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-normal text-gray-500">Hours Worked</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-3xl font-bold">127</p>
-                </CardContent>
-              </Card>
-            </div>
-          </>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
