@@ -51,7 +51,7 @@ const Hero = () => {
                 href="tel:+8801772322383" 
                 className="btn-secondary group"
               >
-                <Phone size={16} className="transition-transform group-hover:rotate-12" /> Call +8801889357506
+                <Phone size={16} className="transition-transform group-hover:rotate-12" /> Call +8801772322383
               </a>
             </div>
           </div>
