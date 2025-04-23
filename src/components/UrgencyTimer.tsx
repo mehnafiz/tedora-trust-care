@@ -27,7 +27,7 @@ const UrgencyTimer = () => {
   }, [hours, minutes]);
   
   return (
-    <div className="w-full bg-tedora-peach text-gray-800 py-2 px-4 flex justify-center items-center text-sm md:text-base font-medium">
+    <div className="w-full bg-[#FF9E7D] text-gray-800 py-2 px-4 flex justify-center items-center text-sm md:text-base font-medium">
       <div className="flex items-center gap-2">
         <Clock size={16} className="animate-pulse" />
         <span>

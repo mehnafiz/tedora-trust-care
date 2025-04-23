@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Menu, Phone, X } from "lucide-react";
+import { Menu, Phone, X, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
@@ -19,7 +19,7 @@ const Navbar = () => {
               className="h-16 md:h-20 w-auto object-contain drop-shadow-md bg-tedora-sage/10 p-2 rounded-lg transition-all duration-300 hover:scale-105"
             />
             <div className="flex flex-col">
-              <span className="text-2xl font-bold text-tedora-sage font-playfair">TEDora+</span>
+              <span className="text-2xl font-bold text-[#6BA8A9] font-playfair">TEDora+</span>
               <span className="text-sm text-gray-600 -mt-1" style={{ fontFamily: 'Aladin, cursive' }}>Trust Everyday Care</span>
             </div>
           </div>
@@ -27,12 +27,15 @@ const Navbar = () => {
         
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-8">
-          <a href="#services" className="text-gray-700 hover:text-tedora-sage transition-colors">Services</a>
-          <a href="#how-it-works" className="text-gray-700 hover:text-tedora-sage transition-colors">How It Works</a>
-          <a href="#team" className="text-gray-700 hover:text-tedora-sage transition-colors">Our Team</a>
-          <Link to="/forms" className="text-gray-700 hover:text-tedora-sage transition-colors">Fill-Form</Link>
-          <Button className="bg-tedora-sage hover:bg-tedora-sage/90 text-white">
-            <Phone size={16} className="mr-2" /> Call Now
+          <a href="#services" className="text-gray-700 hover:text-[#6BA8A9] transition-colors">Services</a>
+          <a href="#how-it-works" className="text-gray-700 hover:text-[#6BA8A9] transition-colors">How It Works</a>
+          <a href="#team" className="text-gray-700 hover:text-[#6BA8A9] transition-colors">Our Team</a>
+          <Link to="/forms" className="text-gray-700 hover:text-[#6BA8A9] transition-colors">Fill-Form</Link>
+          <Link to="/login" className="text-gray-700 hover:text-[#6BA8A9] transition-colors flex items-center gap-1">
+            <LogIn size={16} /> Login
+          </Link>
+          <Button className="bg-[#6BA8A9] hover:bg-[#6BA8A9]/90 text-white">
+            <Phone size={16} className="mr-2" /> +8801772322383
           </Button>
         </div>
         
@@ -40,7 +43,7 @@ const Navbar = () => {
         <div className="md:hidden">
           <button 
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="p-2 text-gray-700 hover:text-tedora-sage"
+            className="p-2 text-gray-700 hover:text-[#6BA8A9]"
           >
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -53,33 +56,40 @@ const Navbar = () => {
           <div className="px-4 py-5 space-y-4">
             <a 
               href="#services" 
-              className="block text-gray-700 hover:text-tedora-sage"
+              className="block text-gray-700 hover:text-[#6BA8A9]"
               onClick={() => setIsMenuOpen(false)}
             >
               Services
             </a>
             <a 
               href="#how-it-works" 
-              className="block text-gray-700 hover:text-tedora-sage"
+              className="block text-gray-700 hover:text-[#6BA8A9]"
               onClick={() => setIsMenuOpen(false)}
             >
               How It Works
             </a>
             <a 
               href="#team" 
-              className="block text-gray-700 hover:text-tedora-sage"
+              className="block text-gray-700 hover:text-[#6BA8A9]"
               onClick={() => setIsMenuOpen(false)}
             >
               Our Team
             </a>
             <Link 
               to="/forms"
-              className="block text-gray-700 hover:text-tedora-sage"
+              className="block text-gray-700 hover:text-[#6BA8A9]"
               onClick={() => setIsMenuOpen(false)}
             >
               Fill-Form
             </Link>
-            <Button className="w-full bg-tedora-sage hover:bg-tedora-sage/90 text-white">
+            <Link 
+              to="/login"
+              className="block text-gray-700 hover:text-[#6BA8A9] flex items-center gap-2"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <LogIn size={16} /> Login
+            </Link>
+            <Button className="w-full bg-[#6BA8A9] hover:bg-[#6BA8A9]/90 text-white">
               <Phone size={16} className="mr-2" /> Call Now
             </Button>
           </div>

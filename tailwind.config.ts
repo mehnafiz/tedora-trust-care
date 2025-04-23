@@ -36,11 +36,11 @@ export default {
 					cream: '#FFF9F0'
 				},
 				primary: {
-					DEFAULT: '#8CA07D', // Soft sage green
+					DEFAULT: '#6BA8A9', // Teal
 					foreground: '#ffffff'
 				},
 				secondary: {
-					DEFAULT: '#FFB88C', // Warm peach
+					DEFAULT: '#FF9E7D', // Coral
 					foreground: '#343434'
 				},
 				destructive: {
@@ -52,7 +52,7 @@ export default {
 					foreground: 'hsl(var(--muted-foreground))'
 				},
 				accent: {
-					DEFAULT: '#FFF9F0', // Cream
+					DEFAULT: '#F5F5F5', // Light gray
 					foreground: '#343434'
 				},
 				popover: {
@@ -77,6 +77,8 @@ export default {
 			fontFamily: {
 				playfair: ['Playfair Display', 'serif'],
 				opensans: ['Open Sans', 'sans-serif'],
+				montserrat: ['Montserrat', 'sans-serif'],
+				nunito: ['Nunito Sans', 'sans-serif'],
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
