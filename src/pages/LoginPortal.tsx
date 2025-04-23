@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,6 +23,18 @@ const LoginPortal = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  useEffect(() => {
+    // Check if user is already logged in
+    const checkUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        navigate('/dashboard');
+      }
+    };
+    
+    checkUser();
+  }, [navigate]);
+
   const handleRoleSelect = (role: string) => {
     setSelectedRole(role);
   };
@@ -41,10 +53,18 @@ const LoginPortal = () => {
     });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    
+  const validateForm = () => {
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      toast({
+        title: "Invalid email",
+        description: "Please enter a valid email address",
+        variant: "destructive",
+      });
+      return false;
+    }
+
     // Validate phone number format
     const phoneRegex = /^\+8801[3-9]\d{8}$/;
     if (!phoneRegex.test(formData.phone)) {
@@ -53,12 +73,50 @@ const LoginPortal = () => {
         description: "Please enter a valid Bangladeshi phone number (+8801XXXXXXXXX)",
         variant: "destructive",
       });
-      setIsLoading(false);
-      return;
+      return false;
     }
+
+    // Validate password length
+    if (formData.password.length < 6) {
+      toast({
+        title: "Weak password",
+        description: "Password must be at least 6 characters long",
+        variant: "destructive",
+      });
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) return;
+    
+    setIsLoading(true);
 
     try {
       if (isSignup) {
+        // Check if user already exists
+        const { data: existingUsers, error: checkError } = await supabase
+          .from('profiles')
+          .select('id')
+          .eq('phone', formData.phone);
+          
+        if (checkError) throw checkError;
+        
+        if (existingUsers && existingUsers.length > 0) {
+          toast({
+            title: "Account already exists",
+            description: "An account with this phone number already exists. Please login instead.",
+            variant: "destructive",
+          });
+          setIsSignup(false);
+          setIsLoading(false);
+          return;
+        }
+        
         // Sign up new user
         const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
           email: formData.email,
@@ -76,9 +134,10 @@ const LoginPortal = () => {
 
         toast({
           title: "Account created successfully!",
-          description: "Please check your email to verify your account.",
+          description: "You have been automatically logged in.",
         });
-
+        
+        navigate('/dashboard');
       } else {
         // Sign in existing user
         const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
@@ -93,7 +152,7 @@ const LoginPortal = () => {
           description: "You have been successfully logged in.",
         });
 
-        navigate("/dashboard");
+        navigate('/dashboard');
       }
     } catch (error: any) {
       toast({
@@ -237,6 +296,7 @@ const LoginPortal = () => {
                   onChange={handleInputChange}
                   required
                   className="mt-1"
+                  minLength={6}
                 />
               </div>
 
@@ -261,6 +321,10 @@ const LoginPortal = () => {
                 </button>
               </div>
             )}
+            
+            <div className="mt-6 text-center">
+              <p className="text-sm text-gray-600">Need help? Call us at <a href="tel:+8801772322383" className="font-semibold text-[#6BA8A9]">+8801772322383</a></p>
+            </div>
           </div>
         )}
       </div>

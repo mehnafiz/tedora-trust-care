@@ -10,6 +10,7 @@ import NotFound from "./pages/NotFound";
 import LoginPortal from "./pages/LoginPortal";
 import Dashboard from "./pages/Dashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import BookService from "./pages/BookService";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ const App = () => {
             <Route path="/login" element={<LoginPortal />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/book-service" element={<BookService />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

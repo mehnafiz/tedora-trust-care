@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Clock } from 'lucide-react';
+import { Clock, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
@@ -9,6 +9,7 @@ import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 import { CaregiverStats } from '@/components/dashboard/CaregiverStats';
 import { ServiceRequestsTable } from '@/components/dashboard/ServiceRequestsTable';
 import { ServicesCard } from '@/components/dashboard/ServicesCard';
+import { useToast } from '@/components/ui/use-toast';
 
 interface CaregiverStats {
   total: number;
@@ -18,29 +19,70 @@ interface CaregiverStats {
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [stats, setStats] = useState<CaregiverStats>({
     total: 0,
     available: 0,
     booked: 0
   });
   const [serviceRequests, setServiceRequests] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<any>(null);
   
   useEffect(() => {
     const checkUser = async () => {
-      const { data: { session }, error } = await supabase.auth.getSession();
-      if (error || !session) {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error) throw error;
+        
+        if (!session) {
+          navigate('/login');
+          return;
+        }
+        
+        setUser(session.user);
+        await fetchData(session.user.id);
+      } catch (error) {
+        console.error('Error checking user session:', error);
         navigate('/login');
-        return;
+      } finally {
+        setLoading(false);
       }
     };
 
-    const fetchStats = async () => {
+    checkUser();
+
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (event === 'SIGNED_OUT') {
+          navigate('/login');
+        } else if (session && event === 'SIGNED_IN') {
+          setUser(session.user);
+          fetchData(session.user.id);
+        }
+      }
+    );
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [navigate]);
+
+  const fetchData = async (userId: string) => {
+    try {
+      // Fetch caregiver stats
       const { data: caregivers, error: caregiverError } = await supabase
         .from('caregivers')
         .select('*');
 
       if (caregiverError) {
         console.error('Error fetching caregivers:', caregiverError);
+        toast({
+          title: "Error",
+          description: "Failed to load caregiver data",
+          variant: "destructive"
+        });
         return;
       }
 
@@ -50,13 +92,9 @@ const Dashboard = () => {
         available: available,
         booked: (caregivers?.length || 0) - available
       });
-    };
 
-    const fetchServiceRequests = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
-
-      const { data: requests, error } = await supabase
+      // Fetch service requests for the user
+      const { data: requests, error: requestError } = await supabase
         .from('service_requests')
         .select(`
           *,
@@ -65,21 +103,33 @@ const Dashboard = () => {
             specialization
           )
         `)
-        .eq('user_id', session.user.id)
+        .eq('user_id', userId)
         .order('created_at', { ascending: false });
 
-      if (error) {
-        console.error('Error fetching service requests:', error);
+      if (requestError) {
+        console.error('Error fetching service requests:', requestError);
+        toast({
+          title: "Error",
+          description: "Failed to load your service requests",
+          variant: "destructive"
+        });
         return;
       }
 
       setServiceRequests(requests || []);
-    };
+    } catch (error) {
+      console.error('Error in fetchData:', error);
+      toast({
+        title: "Error",
+        description: "Something went wrong while loading your dashboard",
+        variant: "destructive"
+      });
+    }
+  };
 
-    checkUser();
-    fetchStats();
-    fetchServiceRequests();
-  }, [navigate]);
+  const handleBookService = (serviceName: string) => {
+    navigate('/book-service', { state: { serviceName } });
+  };
 
   const services = [
     {
@@ -109,6 +159,14 @@ const Dashboard = () => {
     }
   ];
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-[#6BA8A9]/10 to-[#FF9E7D]/10 p-4 flex items-center justify-center">
+        <p className="text-lg">Loading your dashboard...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#6BA8A9]/10 to-[#FF9E7D]/10 p-4">
       <div className="container mx-auto">
@@ -125,7 +183,10 @@ const Dashboard = () => {
                 <div className="text-center py-8">
                   <Clock className="mx-auto text-gray-400 mb-2" size={32} />
                   <p className="text-gray-500">No service requests found</p>
-                  <Button className="mt-4 bg-[#FF9E7D] hover:bg-[#FF9E7D]/90">
+                  <Button 
+                    className="mt-4 bg-[#FF9E7D] hover:bg-[#FF9E7D]/90"
+                    onClick={() => navigate('/book-service')}
+                  >
                     Book Your First Service
                   </Button>
                 </div>
@@ -134,7 +195,10 @@ const Dashboard = () => {
           )}
         </div>
 
-        <ServicesCard services={services} />
+        <div className="mt-6">
+          <h2 className="text-xl font-montserrat font-bold">Available Services</h2>
+          <ServicesCard services={services} onBookService={handleBookService} />
+        </div>
       </div>
     </div>
   );
