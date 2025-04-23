@@ -12,7 +12,7 @@ const Footer = () => {
             <ul className="space-y-4">
               <li className="flex items-center gap-3">
                 <Phone size={20} className="text-tedora-peach" />
-                <a href="tel:+8801889357506" className="hover:text-tedora-peach transition-colors">
+                <a href="tel:+8801772322383" className="hover:text-tedora-peach transition-colors">
                   +8801772322383
                 </a>
               </li>
@@ -88,7 +88,7 @@ const Footer = () => {
             <div className="bg-tedora-sage text-white p-4 rounded-lg shadow-lg">
               <p className="font-bold mb-2">Limited Slots Available – Book Your Caregiver Today!</p>
               <a 
-                href="tel:+8801889357506"
+                href="tel:+8801772322383"
                 className="bg-white text-tedora-sage py-2 px-4 rounded-md inline-flex items-center gap-2 font-semibold hover:bg-gray-100 transition-colors mt-1"
               >
                 <Phone size={16} /> Call Now
@@ -105,7 +105,7 @@ const Footer = () => {
       
       {/* WhatsApp Widget */}
       <a 
-        href="https://wa.me/8801889357506" 
+        href="https://wa.me/8801772322383" 
         target="_blank" 
         rel="noopener noreferrer"
         className="fixed bottom-6 right-6 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 transition-colors z-50"
