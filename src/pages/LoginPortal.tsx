@@ -4,22 +4,55 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import RoleSelection from "@/components/auth/RoleSelection";
 import AuthForm from "@/components/auth/AuthForm";
+import { useToast } from "@/hooks/use-toast";
 
 const LoginPortal = () => {
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   useEffect(() => {
     // Check if user is already logged in
     const checkUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        navigate('/dashboard');
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (session) {
+          const userData = session.user.user_metadata;
+          
+          // If user is logged in, check their role and redirect appropriately
+          if (userData && userData.role === "client") {
+            navigate('/dashboard');
+          } else {
+            // Check if they're an employee
+            const { data: employee, error } = await supabase
+              .from('employees')
+              .select('*')
+              .eq('user_id', session.user.id)
+              .single();
+            
+            if (employee) {
+              navigate('/dashboard');
+            } else {
+              // If not a client or employee, sign them out
+              await supabase.auth.signOut();
+              toast({
+                title: "Session expired",
+                description: "Please log in again",
+              });
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Error checking user session:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
     
     checkUser();
-  }, [navigate]);
+  }, [navigate, toast]);
 
   const handleRoleSelect = (role: string) => {
     setSelectedRole(role);
@@ -32,6 +65,17 @@ const LoginPortal = () => {
   const handleSuccess = () => {
     navigate('/dashboard');
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-[#6BA8A9]/10 to-[#FF9E7D]/10 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#6BA8A9] mx-auto mb-4"></div>
+          <p className="text-gray-600">Checking your session...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#6BA8A9]/10 to-[#FF9E7D]/10">
