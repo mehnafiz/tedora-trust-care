@@ -24,37 +24,72 @@ const HowItWorks = () => {
   return (
     <section
       id="how-it-works"
-      className="py-16 pt-24 bg-gradient-to-br from-[#F5F5F5] via-white to-[#F5F5F5]/30"
+      className="py-24 bg-gradient-to-br from-[#F5F5F5] via-white to-[#F5F5F5]/30 relative overflow-hidden"
     >
+      {/* Decorative elements */}
+      <div className="absolute top-0 left-0 w-full h-20 bg-gradient-to-b from-white to-transparent"></div>
+      <div className="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-white to-transparent"></div>
+      <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-tedora-sage/5 blur-3xl"></div>
+      <div className="absolute -bottom-20 -left-20 w-80 h-80 rounded-full bg-tedora-peach/5 blur-3xl"></div>
+      
       <div className="container mx-auto px-4">
-        <h2 className="section-title relative inline-block font-montserrat">
-          How It Works
-          <div className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-[#6BA8A9] to-[#FF9E7D]"></div>
-        </h2>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="mb-16"
+        >
+          <h2 className="section-title relative inline-block font-montserrat">
+            How It Works
+            <div className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-[#6BA8A9] to-[#FF9E7D]"></div>
+          </h2>
+          
+          <p className="text-center text-gray-600 mt-8 max-w-2xl mx-auto">
+            We've simplified the process to get you the care you need quickly and efficiently. 
+            Just three easy steps to peace of mind.
+          </p>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto mt-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {steps.map((step, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.2 }}
+              transition={{ delay: index * 0.2, duration: 0.5 }}
               viewport={{ once: true }}
               whileHover={{ y: -5 }}
-              className="group bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-xl text-center border border-[#6BA8A9]/10 hover:shadow-2xl transition-all duration-500"
+              className="group glass-card p-8 text-center hover:shadow-2xl transition-all duration-500"
             >
-              {/* Icon inside the card */}
-              <div className="mx-auto mb-6 w-16 h-16 rounded-full bg-gradient-to-br from-[#6BA8A9]/10 to-[#F5F5F5]/50 flex items-center justify-center shadow-md border border-[#6BA8A9]/20 group-hover:scale-105 transition-transform duration-300">
-                {step.icon}
+              {/* Icon inside the card with pulsing animation */}
+              <div className="relative mx-auto mb-6 w-20 h-20 rounded-full bg-gradient-to-br from-[#6BA8A9]/10 to-[#F5F5F5]/50 flex items-center justify-center shadow-md border border-[#6BA8A9]/20 group-hover:scale-105 transition-transform duration-300">
+                <motion.div
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ duration: 3, repeat: Infinity, delay: index * 0.8 }}
+                >
+                  {step.icon}
+                </motion.div>
+                
+                <div className="absolute -right-1 -top-1 w-6 h-6 bg-tedora-peach rounded-full flex items-center justify-center text-white font-bold text-sm border-2 border-white">
+                  {index + 1}
+                </div>
               </div>
 
-              <h3 className="text-xl font-bold font-montserrat text-[#6BA8A9] mb-2 group-hover:text-[#6BA8A9]/80 transition-colors">
-                {index + 1}. {step.title}
+              <h3 className="text-xl font-bold font-montserrat text-[#6BA8A9] mb-3 group-hover:text-[#6BA8A9]/80 transition-colors">
+                {step.title}
               </h3>
+              
               <p className="text-gray-600 leading-relaxed font-nunito">{step.description}</p>
+              
+              {/* Decorative underline that appears on hover */}
+              <div className="h-0.5 w-0 bg-tedora-peach mt-4 mx-auto group-hover:w-1/3 transition-all duration-500"></div>
             </motion.div>
           ))}
         </div>
+        
+        {/* Animated divider */}
+        <div className="animated-divider mt-16"></div>
       </div>
     </section>
   );

@@ -1,100 +1,177 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Menu, Phone, X, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
   
   return (
-    <nav className="bg-white shadow-sm sticky top-0 z-50">
+    <nav className={`sticky top-0 z-50 transition-all duration-300 ${
+      isScrolled ? "bg-white/90 backdrop-blur-md shadow-md" : "bg-white"
+    }`}>
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         {/* Logo and Text */}
         <Link to="/" className="flex items-center">
           <div className="flex items-center space-x-4">
-            <img 
-              src="/lovable-uploads/392329e6-0859-48e9-9da2-7918163f0ee5.png" 
-              alt="TEDora+ Logo" 
-              className="h-16 md:h-20 w-auto object-contain drop-shadow-md bg-tedora-sage/10 p-2 rounded-lg transition-all duration-300 hover:scale-105"
-            />
+            <motion.div 
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 400, damping: 10 }}
+            >
+              <img 
+                src="/lovable-uploads/392329e6-0859-48e9-9da2-7918163f0ee5.png" 
+                alt="TEDora+ Logo" 
+                className="h-16 md:h-20 w-auto object-contain drop-shadow-md bg-tedora-sage/10 p-2 rounded-lg"
+              />
+            </motion.div>
             <div className="flex flex-col">
-              <span className="text-2xl font-bold text-[#6BA8A9] font-playfair">TEDora+</span>
-              <span className="text-sm text-gray-600 -mt-1" style={{ fontFamily: 'Aladin, cursive' }}>Trust Everyday Care</span>
+              <span className="text-2xl font-bold gradient-text font-playfair">TEDora+</span>
+              <span className="text-sm text-gray-600 -mt-1 italic">Trust Everyday Care</span>
             </div>
           </div>
         </Link>
         
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center space-x-8">
-          <a href="#services" className="text-gray-700 hover:text-[#6BA8A9] transition-colors">Services</a>
-          <a href="#how-it-works" className="text-gray-700 hover:text-[#6BA8A9] transition-colors">How It Works</a>
-          <a href="#team" className="text-gray-700 hover:text-[#6BA8A9] transition-colors">Our Team</a>
-          <Link to="/forms" className="text-gray-700 hover:text-[#6BA8A9] transition-colors">Fill-Form</Link>
-          <Link to="/login" className="text-gray-700 hover:text-[#6BA8A9] transition-colors flex items-center gap-1">
-            <LogIn size={16} /> Login
-          </Link>
-          <Button className="bg-[#6BA8A9] hover:bg-[#6BA8A9]/90 text-white">
-            <Phone size={16} className="mr-2" /> +8801772322383
-          </Button>
+        <div className="hidden md:flex items-center space-x-6">
+          {['services', 'how-it-works', 'team'].map((item, index) => (
+            <motion.a 
+              key={item}
+              href={`#${item}`} 
+              className="text-gray-700 hover:text-[#6BA8A9] transition-colors relative group"
+              whileHover={{ scale: 1.05 }}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: index * 0.1 }}
+            >
+              {item.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-tedora-sage group-hover:w-full transition-all duration-300"></span>
+            </motion.a>
+          ))}
+          
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.3 }}
+          >
+            <Link to="/forms" className="text-gray-700 hover:text-[#6BA8A9] transition-colors relative group">
+              Fill-Form
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-tedora-sage group-hover:w-full transition-all duration-300"></span>
+            </Link>
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.4 }}
+          >
+            <Link to="/login" className="text-gray-700 hover:text-[#6BA8A9] transition-colors flex items-center gap-1 relative group">
+              <LogIn size={16} />
+              <span>Login</span>
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-tedora-sage group-hover:w-full transition-all duration-300"></span>
+            </Link>
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3, delay: 0.5 }}
+          >
+            <Button className="bg-[#6BA8A9] hover:bg-[#6BA8A9]/90 text-white rounded-full">
+              <Phone size={16} className="mr-2" /> +8801772322383
+            </Button>
+          </motion.div>
         </div>
         
         {/* Mobile menu button */}
         <div className="md:hidden">
-          <button 
+          <motion.button 
+            whileTap={{ scale: 0.95 }}
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="p-2 text-gray-700 hover:text-[#6BA8A9]"
           >
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          </motion.button>
         </div>
       </div>
       
-      {/* Mobile menu */}
-      {isMenuOpen && (
-        <div className="md:hidden bg-white border-t">
-          <div className="px-4 py-5 space-y-4">
-            <a 
-              href="#services" 
-              className="block text-gray-700 hover:text-[#6BA8A9]"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Services
-            </a>
-            <a 
-              href="#how-it-works" 
-              className="block text-gray-700 hover:text-[#6BA8A9]"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              How It Works
-            </a>
-            <a 
-              href="#team" 
-              className="block text-gray-700 hover:text-[#6BA8A9]"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Our Team
-            </a>
-            <Link 
-              to="/forms"
-              className="block text-gray-700 hover:text-[#6BA8A9]"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Fill-Form
-            </Link>
-            <Link 
-              to="/login"
-              className="block text-gray-700 hover:text-[#6BA8A9] flex items-center gap-2"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <LogIn size={16} /> Login
-            </Link>
-            <Button className="w-full bg-[#6BA8A9] hover:bg-[#6BA8A9]/90 text-white">
-              <Phone size={16} className="mr-2" /> Call Now
-            </Button>
-          </div>
-        </div>
-      )}
+      {/* Mobile menu with animation */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div 
+            className="md:hidden bg-white/95 backdrop-blur-md border-t"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="px-4 py-5 space-y-4">
+              {['services', 'how-it-works', 'team'].map((item, index) => (
+                <motion.a 
+                  key={item}
+                  href={`#${item}`} 
+                  className="block text-gray-700 hover:text-[#6BA8A9] py-2 border-b border-gray-100"
+                  onClick={() => setIsMenuOpen(false)}
+                  initial={{ x: -20, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  {item.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+                </motion.a>
+              ))}
+              
+              <motion.div
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.3 }}
+              >
+                <Link 
+                  to="/forms"
+                  className="block text-gray-700 hover:text-[#6BA8A9] py-2 border-b border-gray-100"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Fill-Form
+                </Link>
+              </motion.div>
+              
+              <motion.div
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.4 }}
+              >
+                <Link 
+                  to="/login"
+                  className="block text-gray-700 hover:text-[#6BA8A9] flex items-center gap-2 py-2 border-b border-gray-100"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <LogIn size={16} /> Login
+                </Link>
+              </motion.div>
+              
+              <motion.div
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.5 }}
+              >
+                <Button className="w-full bg-[#6BA8A9] hover:bg-[#6BA8A9]/90 text-white rounded-full mt-2">
+                  <Phone size={16} className="mr-2" /> Call Now
+                </Button>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 };

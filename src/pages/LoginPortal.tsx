@@ -1,9 +1,12 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import RoleSelection from "@/components/auth/RoleSelection";
 import AuthFormContainer from "@/components/auth/AuthFormContainer";
 import { useToast } from "@/hooks/use-toast";
+import { motion } from "framer-motion";
+import { Loader2 } from "lucide-react";
 
 const LoginPortal = () => {
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
@@ -68,27 +71,64 @@ const LoginPortal = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#6BA8A9]/10 to-[#FF9E7D]/10 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#6BA8A9] mx-auto mb-4"></div>
+        <motion.div 
+          className="text-center glass-card p-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Loader2 className="h-12 w-12 text-tedora-sage animate-spin mx-auto mb-4" />
           <p className="text-gray-600">Checking your session...</p>
-        </div>
+        </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#6BA8A9]/10 to-[#FF9E7D]/10">
-      <div className="container mx-auto px-4 py-12 flex flex-col items-center">
-        {/* Logo and Tagline */}
-        <div className="mb-16 text-center">
-          <img 
-            src="/lovable-uploads/392329e6-0859-48e9-9da2-7918163f0ee5.png" 
-            alt="TEDora+ Logo" 
-            className="h-32 w-auto mx-auto drop-shadow-lg"
-          />
-          <h1 className="text-3xl font-montserrat font-bold mt-4 text-gray-800">TEDora+</h1>
-          <p className="text-[#6BA8A9] italic">"Trust Everyday Care"</p>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-[#6BA8A9]/10 to-[#FF9E7D]/10 relative">
+      {/* Background decorative elements */}
+      <div className="absolute top-0 left-0 w-full h-20 bg-gradient-to-b from-white/50 to-transparent"></div>
+      <div className="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-white/50 to-transparent"></div>
+      <div className="absolute top-40 left-10 w-80 h-80 rounded-full bg-tedora-sage/5 blur-3xl"></div>
+      <div className="absolute bottom-40 right-10 w-80 h-80 rounded-full bg-tedora-peach/5 blur-3xl"></div>
+      
+      <div className="container mx-auto px-4 py-12 flex flex-col items-center relative z-10">
+        {/* Logo and Tagline with animations */}
+        <motion.div 
+          className="mb-16 text-center"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <motion.div
+            whileHover={{ scale: 1.05, rotate: 2 }}
+            transition={{ type: "spring", stiffness: 300, damping: 10 }}
+          >
+            <img 
+              src="/lovable-uploads/392329e6-0859-48e9-9da2-7918163f0ee5.png" 
+              alt="TEDora+ Logo" 
+              className="h-32 w-auto mx-auto drop-shadow-lg"
+            />
+          </motion.div>
+          
+          <motion.h1 
+            className="text-4xl font-montserrat font-bold mt-4 gradient-text"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+          >
+            TEDora+
+          </motion.h1>
+          
+          <motion.p 
+            className="text-tedora-sage italic mt-2"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5, duration: 0.6 }}
+          >
+            "Trust Everyday Care"
+          </motion.p>
+        </motion.div>
 
         {!selectedRole ? (
           <RoleSelection onRoleSelect={handleRoleSelect} />
