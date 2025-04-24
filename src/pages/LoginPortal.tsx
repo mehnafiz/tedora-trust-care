@@ -1,9 +1,8 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import RoleSelection from "@/components/auth/RoleSelection";
-import AuthForm from "@/components/auth/AuthForm";
+import AuthFormContainer from "@/components/auth/AuthFormContainer";
 import { useToast } from "@/hooks/use-toast";
 
 const LoginPortal = () => {
@@ -94,7 +93,7 @@ const LoginPortal = () => {
         {!selectedRole ? (
           <RoleSelection onRoleSelect={handleRoleSelect} />
         ) : (
-          <AuthForm 
+          <AuthFormContainer 
             selectedRole={selectedRole}
             onBack={handleBack}
             onSuccess={handleSuccess}
