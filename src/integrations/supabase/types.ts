@@ -51,6 +51,33 @@ export type Database = {
         }
         Relationships: []
       }
+      employees: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          is_validated: boolean | null
+          user_id: string
+          validated_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          is_validated?: boolean | null
+          user_id: string
+          validated_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          is_validated?: boolean | null
+          user_id?: string
+          validated_at?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           address: string | null

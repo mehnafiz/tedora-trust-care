@@ -1,7 +1,11 @@
 
 import { User } from "lucide-react";
+import { useEmployeeValidation } from "@/hooks/useEmployeeValidation";
+import { Card } from "@/components/ui/card";
 
 const TeamSection = () => {
+  const { isValidEmployee, isLoading } = useEmployeeValidation();
+  
   const team = [
      {
       name: "MD. Nafiz Ahmed Tanim",
@@ -30,6 +34,21 @@ const TeamSection = () => {
     }
    
   ];
+
+  if (!isValidEmployee && !isLoading) {
+    return (
+      <section id="team" className="py-16 bg-tedora-cream/30">
+        <div className="container mx-auto px-4">
+          <h2 className="section-title">Founders</h2>
+          <Card className="p-6 text-center bg-white/90 backdrop-blur-sm">
+            <p className="text-gray-600">
+              This section is only visible to validated employees. Please contact your administrator for access.
+            </p>
+          </Card>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="team" className="py-16 bg-tedora-cream/30">
@@ -66,4 +85,3 @@ const TeamSection = () => {
 };
 
 export default TeamSection;
-
