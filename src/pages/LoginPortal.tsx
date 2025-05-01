@@ -105,9 +105,9 @@ const LoginPortal = () => {
             transition={{ type: "spring", stiffness: 300, damping: 10 }}
           >
             <img 
-              src="/lovable-uploads/392329e6-0859-48e9-9da2-7918163f0ee5.png" 
+              src="/lovable-uploads/47c58735-b6ab-46e9-8705-6f0e66f3ed34.png" 
               alt="TEDora+ Logo" 
-              className="h-32 w-auto mx-auto drop-shadow-lg"
+              className="h-32 w-auto mx-auto drop-shadow-lg rounded-full"
             />
           </motion.div>
           

@@ -17,9 +17,9 @@ export const DashboardHeader = () => {
     <div className="flex justify-between items-center mb-8">
       <Link to="/" className="flex items-center gap-2">
         <img 
-          src="/lovable-uploads/392329e6-0859-48e9-9da2-7918163f0ee5.png" 
+          src="/lovable-uploads/47c58735-b6ab-46e9-8705-6f0e66f3ed34.png" 
           alt="TEDora+ Logo" 
-          className="h-12 w-auto"
+          className="h-12 w-auto rounded-full"
         />
         <span className="text-xl font-bold text-[#6BA8A9]">TEDora+</span>
       </Link>

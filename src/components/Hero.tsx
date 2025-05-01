@@ -157,7 +157,7 @@ const Hero = () => {
                         <img 
                           src="/lovable-uploads/211ff065-3b7c-4b1b-8acd-38254c7f827b.png" 
                           alt="Childcare" 
-                          className="h-10 w-auto" 
+                          className="h-10 w-auto rounded-full" 
                         />
                       </motion.div>
                     </div>
@@ -179,7 +179,7 @@ const Hero = () => {
                         <img 
                           src="/lovable-uploads/2742d846-9da9-4ccf-976d-8b54cd790173.png" 
                           alt="Elderly Care" 
-                          className="h-10 w-auto" 
+                          className="h-10 w-auto rounded-full" 
                         />
                       </motion.div>
                     </div>
