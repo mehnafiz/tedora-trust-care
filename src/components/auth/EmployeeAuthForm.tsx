@@ -68,17 +68,8 @@ const EmployeeAuthForm = ({ onSuccess }: EmployeeAuthFormProps) => {
         return;
       }
       
-      // If validated employee, update their record to show they logged in
-      const { error: updateError } = await supabase
-        .from('employees')
-        .update({
-          // Remove the last_login field as it doesn't exist in the employee type
-        })
-        .eq('user_id', signInData.user.id);
-      
-      if (updateError) {
-        console.error('Error updating employee login timestamp:', updateError);
-      }
+      // The update is removed since the last_login field doesn't exist in the employees table
+      // We could add a timestamp update here if we added that field to the table
       
       toast({
         title: "Welcome back",

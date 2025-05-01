@@ -59,10 +59,7 @@ const AuthFormContainer = ({ selectedRole, onBack, onSuccess }: AuthFormContaine
           toast={toast}
         />
       ) : (
-        <EmployeeAuthForm 
-          onSuccess={onSuccess}
-          toast={toast}
-        />
+        <EmployeeAuthForm onSuccess={onSuccess} />
       )}
     </motion.div>
   );
