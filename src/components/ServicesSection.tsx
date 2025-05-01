@@ -23,19 +23,19 @@ const ServicesSection = () => {
     {
       name: "Full-Day Childcare",
       timeSlot: "8 AM – 6 PM",
-      price: "৳1,499/day",
+      price: "৳999/day",
       minTime: ""
     },
     {
       name: "Overnight Care",
       timeSlot: "10 PM – 6 AM",
-      price: "৳1,999/night",
+      price: "৳1,499/night",
       minTime: ""
     },
     {
       name: "Elderly Care (Daily)",
       timeSlot: "8 AM – 8 PM",
-      price: "৳1,799/day",
+      price: "৳1,199/day",
       minTime: ""
     },
     {
