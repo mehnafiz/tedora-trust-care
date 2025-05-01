@@ -10,14 +10,14 @@ const TeamSection = () => {
      {
       name: "MD. Nafiz Ahmed Tanim",
       role: "CEO",
-      description: "Lead Care Coordinator",
+      description: "Lead Coordinator",
       image: "/lovable-uploads/36860606-24da-4223-ad91-f141317ce276.png"
     },
     
     {
       name: "Zahin Iltamas",
       role: "Director",
-      description: "Elderly Care Logistics Expert",
+      description: "Director | Safety Systems Training",
       image: "/lovable-uploads/211ff065-3b7c-4b1b-8acd-38254c7f827b.png"
     },
     {
