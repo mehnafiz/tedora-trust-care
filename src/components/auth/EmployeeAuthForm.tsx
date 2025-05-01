@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface EmployeeAuthFormProps {
   onSuccess: () => void;
@@ -15,6 +16,7 @@ interface EmployeeAuthFormProps {
 const EmployeeAuthForm = ({ onSuccess, toast }: EmployeeAuthFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [loginAttempts, setLoginAttempts] = useState(0);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -33,18 +35,28 @@ const EmployeeAuthForm = ({ onSuccess, toast }: EmployeeAuthFormProps) => {
     setErrorMessage(null);
     setIsLoading(true);
 
+    // Check if too many failed attempts (simple rate limiting)
+    if (loginAttempts >= 5) {
+      setErrorMessage("Too many failed login attempts. Please try again later.");
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email: formData.email,
         password: formData.password,
       });
 
-      if (signInError) throw signInError;
+      if (signInError) {
+        setLoginAttempts(prev => prev + 1);
+        throw signInError;
+      }
       
       // Verify this is an employee account by checking the employees table
       const { data: employeeData, error: employeeError } = await supabase
         .from('employees')
-        .select('*')
+        .select('*, is_validated')
         .eq('email', formData.email)
         .eq('user_id', data.user?.id)
         .single();
@@ -52,13 +64,30 @@ const EmployeeAuthForm = ({ onSuccess, toast }: EmployeeAuthFormProps) => {
       if (employeeError || !employeeData) {
         // If not an employee, sign out and show error
         await supabase.auth.signOut();
+        setLoginAttempts(prev => prev + 1);
         throw new Error("Unauthorized access. This login is for authorized employees only.");
       }
+
+      // Check if employee is validated
+      if (!employeeData.is_validated) {
+        await supabase.auth.signOut();
+        throw new Error("Your account has not been validated yet. Please contact an administrator.");
+      }
+
+      // Reset login attempts on successful login
+      setLoginAttempts(0);
 
       toast({
         title: "Employee authenticated",
         description: "Welcome to the employee portal.",
       });
+
+      // Update employee's last login time in the database
+      const now = new Date().toISOString();
+      await supabase
+        .from('employees')
+        .update({ last_login: now })
+        .eq('user_id', data.user?.id);
 
       onSuccess();
     } catch (error: any) {
@@ -116,7 +145,7 @@ const EmployeeAuthForm = ({ onSuccess, toast }: EmployeeAuthFormProps) => {
         <Button 
           type="submit" 
           className="w-full bg-[#FF9E7D] hover:bg-[#FF9E7D]/90 text-white"
-          disabled={isLoading}
+          disabled={isLoading || loginAttempts >= 5}
         >
           {isLoading ? "Processing..." : "Employee Login"}
         </Button>

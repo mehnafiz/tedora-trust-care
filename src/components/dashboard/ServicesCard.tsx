@@ -21,7 +21,7 @@ export const ServicesCard = ({ services, onBookService }: ServicesCardProps) => 
           <div key={index} className="p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
             <h3 className="font-semibold text-lg text-[#6BA8A9]">{service.name}</h3>
             <p className="text-sm text-gray-600 mt-1">{service.timeSlot}</p>
-            <p className="text-lg font-bold mt-2">₹{service.price}</p>
+            <p className="text-lg font-bold mt-2">৳{service.price}</p>
             {onBookService && (
               <Button 
                 className="w-full mt-3 bg-[#FF9E7D] hover:bg-[#FF9E7D]/90 text-white"

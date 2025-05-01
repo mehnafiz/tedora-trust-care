@@ -33,7 +33,7 @@ const Navbar = () => {
               <img 
                 src="/lovable-uploads/392329e6-0859-48e9-9da2-7918163f0ee5.png" 
                 alt="TEDora+ Logo" 
-                className="h-16 md:h-20 w-auto object-contain drop-shadow-md bg-tedora-sage/10 p-2 rounded-lg"
+                className="h-16 md:h-20 w-auto object-contain drop-shadow-md bg-tedora-sage/10 p-2 rounded-full"
               />
             </motion.div>
             <div className="flex flex-col">
@@ -59,17 +59,6 @@ const Navbar = () => {
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-tedora-sage group-hover:w-full transition-all duration-300"></span>
             </motion.a>
           ))}
-          
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.3 }}
-          >
-            <Link to="/forms" className="text-gray-700 hover:text-[#6BA8A9] transition-colors relative group">
-              Fill-Form
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-tedora-sage group-hover:w-full transition-all duration-300"></span>
-            </Link>
-          </motion.div>
           
           <motion.div
             initial={{ opacity: 0, y: -10 }}
@@ -130,20 +119,6 @@ const Navbar = () => {
                   {item.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
                 </motion.a>
               ))}
-              
-              <motion.div
-                initial={{ x: -20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 0.3 }}
-              >
-                <Link 
-                  to="/forms"
-                  className="block text-gray-700 hover:text-[#6BA8A9] py-2 border-b border-gray-100"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Fill-Form
-                </Link>
-              </motion.div>
               
               <motion.div
                 initial={{ x: -20, opacity: 0 }}

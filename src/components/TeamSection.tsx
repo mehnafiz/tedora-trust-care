@@ -66,7 +66,7 @@ const TeamSection = () => {
                   <img 
                     src={member.image} 
                     alt={member.name} 
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover rounded-full"
                   />
                 ) : (
                   <User size={40} className="text-gray-400" />

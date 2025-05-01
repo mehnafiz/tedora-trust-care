@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Clock, Calendar, AlertCircle } from 'lucide-react';
@@ -139,6 +138,7 @@ const Dashboard = () => {
     navigate('/book-service', { state: { serviceName } });
   };
 
+  // Updated services with BDT currency format
   const services = [
     {
       name: "Hourly Babysitting",
