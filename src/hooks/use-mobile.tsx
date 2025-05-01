@@ -1,19 +1,33 @@
-import * as React from "react"
 
-const MOBILE_BREAKPOINT = 768
+import { useEffect, useState } from "react";
 
-export function useIsMobile() {
-  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined)
+export const useMediaQuery = (query: string): boolean => {
+  const [matches, setMatches] = useState(false);
 
-  React.useEffect(() => {
-    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`)
-    const onChange = () => {
-      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
+  useEffect(() => {
+    const media = window.matchMedia(query);
+    
+    // Update the state with the current value
+    if (media.matches !== matches) {
+      setMatches(media.matches);
     }
-    mql.addEventListener("change", onChange)
-    setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
-    return () => mql.removeEventListener("change", onChange)
-  }, [])
 
-  return !!isMobile
-}
+    // Create a listener to track changes
+    const listener = () => {
+      setMatches(media.matches);
+    };
+    
+    // Add the listener to the media query
+    media.addEventListener("change", listener);
+    
+    // Check initially
+    setMatches(media.matches);
+    
+    // Remove the listener when component unmounts
+    return () => {
+      media.removeEventListener("change", listener);
+    };
+  }, [matches, query]);
+
+  return matches;
+};

@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Clock, Calendar, AlertCircle, Star, CreditCard } from 'lucide-react';
+import { Clock, Calendar, AlertCircle, Star, CreditCard, FileText, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
