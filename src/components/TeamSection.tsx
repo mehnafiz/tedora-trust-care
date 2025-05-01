@@ -8,7 +8,7 @@ const TeamSection = () => {
   
   const team = [
      {
-      name: "MD. Nafiz Ahmed Tanim",
+      name: "Nafiz Ahmed",
       role: "CEO",
       description: "Lead Coordinator",
       image: "/lovable-uploads/36860606-24da-4223-ad91-f141317ce276.png"
