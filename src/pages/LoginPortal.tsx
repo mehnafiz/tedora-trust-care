@@ -6,7 +6,7 @@ import RoleSelection from "@/components/auth/RoleSelection";
 import AuthFormContainer from "@/components/auth/AuthFormContainer";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
-import { Loader2 } from "lucide-react";
+import { Loader2, Shield, Lock } from "lucide-react";
 
 const LoginPortal = () => {
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
@@ -92,6 +92,14 @@ const LoginPortal = () => {
       <div className="absolute top-40 left-10 w-80 h-80 rounded-full bg-tedora-sage/5 blur-3xl"></div>
       <div className="absolute bottom-40 right-10 w-80 h-80 rounded-full bg-tedora-peach/5 blur-3xl"></div>
       
+      {/* Security badges */}
+      <div className="absolute top-4 right-4 flex items-center gap-2">
+        <div className="bg-white/80 backdrop-blur-sm rounded-full px-3 py-1 flex items-center gap-1 shadow-sm">
+          <Lock className="h-3 w-3 text-tedora-sage" />
+          <span className="text-xs text-gray-600 font-medium">Secure Login</span>
+        </div>
+      </div>
+      
       <div className="container mx-auto px-4 py-12 flex flex-col items-center relative z-10">
         {/* Logo and Tagline with animations */}
         <motion.div 
@@ -128,6 +136,16 @@ const LoginPortal = () => {
           >
             "Trust Everyday Care"
           </motion.p>
+          
+          <motion.div
+            className="mt-4 flex items-center justify-center gap-2"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.7, duration: 0.6 }}
+          >
+            <Shield className="h-4 w-4 text-tedora-sage" />
+            <span className="text-sm text-gray-600">Secure, trusted caregiving services</span>
+          </motion.div>
         </motion.div>
 
         {!selectedRole ? (
