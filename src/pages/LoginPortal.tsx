@@ -32,7 +32,7 @@ const LoginPortal = () => {
               .from('employees')
               .select('*')
               .eq('user_id', session.user.id)
-              .single();
+              .maybeSingle();
             
             if (employee) {
               navigate('/dashboard');

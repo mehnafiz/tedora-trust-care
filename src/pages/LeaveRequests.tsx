@@ -1,109 +1,106 @@
 
-import { useState } from "react";
-import { PhoneCall, Calendar, Mail } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useEffect, useState } from "react";
+import { Loader2 } from "lucide-react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import { PhoneCall } from "lucide-react";
 
 const LeaveRequests = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   
-  const handleCallNow = () => {
-    toast({
-      title: "Calling TEDora+ HR",
-      description: "Redirecting you to call our HR department",
-    });
-    window.location.href = "tel:+8801772322383";
-  };
+  useEffect(() => {
+    // Just for demonstration purposes
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+    
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <Loader2 className="h-8 w-8 animate-spin text-tedora-sage" />
+        </div>
+      </DashboardLayout>
+    );
+  }
 
   return (
     <DashboardLayout>
-      <div className="space-y-6">
-        <h2 className="text-xl font-montserrat font-bold">Leave Management</h2>
+      <div className="px-4 py-6 sm:px-6 lg:px-8">
+        <h1 className="text-2xl font-semibold text-gray-900">Leave Requests</h1>
         
-        <Card className="border border-slate-200 shadow-md overflow-hidden">
-          <div className="bg-gradient-to-r from-tedora-sage to-tedora-sage/70 p-6">
-            <CardHeader className="p-0 pb-6">
-              <CardTitle className="text-white text-2xl">Leave Request Service</CardTitle>
-            </CardHeader>
-            <p className="text-white/90">
-              Our online leave management system is being upgraded to serve you better.
-              For now, please use the direct contact methods below to submit or inquire about leave requests.
-            </p>
-          </div>
-          
-          <CardContent className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <Card className="border border-slate-200 bg-white shadow-sm hover:shadow-md transition-shadow">
-                <CardContent className="pt-6 flex flex-col items-center text-center">
-                  <div className="w-12 h-12 bg-tedora-sage/10 rounded-full flex items-center justify-center mb-4">
-                    <PhoneCall className="h-6 w-6 text-tedora-sage" />
+        <div className="mt-6">
+          <Tabs defaultValue="apply">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="apply">Apply for Leave</TabsTrigger>
+              <TabsTrigger value="pending">Pending Requests</TabsTrigger>
+              <TabsTrigger value="history">Request History</TabsTrigger>
+            </TabsList>
+            <TabsContent value="apply" className="mt-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Leave Application</CardTitle>
+                  <CardDescription>
+                    For leave requests, please contact us directly via phone.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="bg-amber-50 p-6 rounded-lg border border-amber-200">
+                    <h3 className="text-xl font-medium text-amber-800 mb-4">Contact TEDora+ HR Department</h3>
+                    <p className="text-amber-700 mb-6">
+                      To apply for leave or discuss your request, please contact us directly through our HR department.
+                    </p>
+                    <div className="flex justify-center">
+                      <a 
+                        href="tel:+8801772322383" 
+                        className="inline-flex items-center px-4 py-2 bg-tedora-sage text-white rounded-md hover:bg-tedora-sage/90 transition-colors"
+                      >
+                        <PhoneCall className="mr-2 h-4 w-4" />
+                        Call +8801772322383
+                      </a>
+                    </div>
                   </div>
-                  <h3 className="font-medium text-lg mb-2">Call HR Directly</h3>
-                  <p className="text-sm text-slate-600 mb-4">
-                    The fastest way to submit your leave request is to call our HR department directly.
-                  </p>
-                  <Button 
-                    onClick={handleCallNow}
-                    className="bg-tedora-sage hover:bg-tedora-sage/90 text-white w-full"
-                  >
-                    Call Now: +8801772322383
-                  </Button>
                 </CardContent>
               </Card>
-              
-              <Card className="border border-slate-200 bg-white shadow-sm hover:shadow-md transition-shadow">
-                <CardContent className="pt-6 flex flex-col items-center text-center">
-                  <div className="w-12 h-12 bg-tedora-peach/10 rounded-full flex items-center justify-center mb-4">
-                    <Mail className="h-6 w-6 text-tedora-peach" />
+            </TabsContent>
+            <TabsContent value="pending" className="mt-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Pending Leave Requests</CardTitle>
+                  <CardDescription>
+                    Your leave requests that are waiting for approval.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-center p-8">
+                    <p className="text-gray-500">You have no pending leave requests.</p>
                   </div>
-                  <h3 className="font-medium text-lg mb-2">Email Your Request</h3>
-                  <p className="text-sm text-slate-600 mb-4">
-                    Send your leave request details to our HR department via email.
-                  </p>
-                  <Button 
-                    variant="outline"
-                    className="border-tedora-peach text-tedora-peach hover:bg-tedora-peach/10 w-full"
-                    onClick={() => window.location.href = "mailto:hr@tedoraplus.com"}
-                  >
-                    Email: hr@tedoraplus.com
-                  </Button>
                 </CardContent>
               </Card>
-              
-              <Card className="border border-slate-200 bg-white shadow-sm hover:shadow-md transition-shadow">
-                <CardContent className="pt-6 flex flex-col items-center text-center">
-                  <div className="w-12 h-12 bg-blue-500/10 rounded-full flex items-center justify-center mb-4">
-                    <Calendar className="h-6 w-6 text-blue-500" />
+            </TabsContent>
+            <TabsContent value="history" className="mt-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Leave Request History</CardTitle>
+                  <CardDescription>
+                    History of your past leave requests and their status.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-center p-8">
+                    <p className="text-gray-500">No leave request history found.</p>
                   </div>
-                  <h3 className="font-medium text-lg mb-2">Visit Office</h3>
-                  <p className="text-sm text-slate-600 mb-4">
-                    Come to our office in person to submit your leave application.
-                  </p>
-                  <Button 
-                    variant="outline"
-                    className="border-blue-500 text-blue-500 hover:bg-blue-500/10 w-full"
-                  >
-                    9AM - 5PM, Monday to Friday
-                  </Button>
                 </CardContent>
               </Card>
-            </div>
-            
-            <div className="mt-8 p-6 bg-amber-50 rounded-lg border border-amber-200">
-              <h3 className="font-medium text-amber-800 mb-2">Information Required for Leave Requests:</h3>
-              <ul className="text-sm text-amber-700 space-y-2 list-disc pl-5">
-                <li>Full name and employee ID</li>
-                <li>Type of leave (sick, annual, emergency, etc.)</li>
-                <li>Start and end dates of requested leave</li>
-                <li>Reason for leave</li>
-                <li>Contact information during leave period</li>
-                <li>Any hand-over information for ongoing tasks</li>
-              </ul>
-            </div>
-          </CardContent>
-        </Card>
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
     </DashboardLayout>
   );

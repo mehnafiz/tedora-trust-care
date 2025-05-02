@@ -52,7 +52,7 @@ const EmployeeAuthForm = ({ onSuccess }: EmployeeAuthFormProps) => {
         .select('*')
         .eq('user_id', signInData.user.id)
         .eq('is_validated', true)
-        .single();
+        .maybeSingle();
       
       if (employeeError || !employeeData) {
         // If not an employee or not validated, sign them out
