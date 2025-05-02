@@ -11,37 +11,37 @@ const ServicesSection = () => {
     {
       name: "Hourly Babysitting",
       timeSlot: "7 AM – 6 PM",
-      price: "৳249/hour",
+      price: "249/hour",
       minTime: "(Min: 3hr)"
     }, 
     {
       name: "Hourly Babysitting (Night)",
       timeSlot: "6 PM – 10 PM",
-      price: "৳299/hour",
+      price: "299/hour",
       minTime: "(Min: 2hr)"
     },
     {
       name: "Full-Day Childcare",
       timeSlot: "8 AM – 6 PM",
-      price: "৳999/day",
+      price: "999/day",
       minTime: ""
     },
     {
       name: "Overnight Care",
       timeSlot: "10 PM – 6 AM",
-      price: "৳1,499/night",
+      price: "1,499/night",
       minTime: ""
     },
     {
       name: "Elderly Care (Daily)",
       timeSlot: "8 AM – 8 PM",
-      price: "৳1,199/day",
+      price: "1,199/day",
       minTime: ""
     },
     {
       name: "Weekend Package",
       timeSlot: "Fri + Sat (Hourly)",
-      price: "৳399/hour",
+      price: "399/hour",
       minTime: ""
     }
   ];
@@ -110,7 +110,7 @@ const ServicesSection = () => {
                       <td className="py-4 px-2 md:px-6 text-gray-600 text-sm md:text-base">{service.timeSlot}</td>
                       <td className="py-4 px-3 md:px-6 text-right">
                         <div className="flex flex-col items-end">
-                          <span className="font-bold text-tedora-sage">{service.price}</span>
+                          <span className="font-bold text-tedora-sage">৳{service.price}</span>
                           <span className="text-xs text-gray-500">{service.minTime}</span>
                         </div>
                       </td>
@@ -119,9 +119,11 @@ const ServicesSection = () => {
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.95 }}
                         >
-                          <Button size="sm" variant="outline" className="rounded-full p-2 border-tedora-peach bg-tedora-peach/10 hover:bg-tedora-peach/20 text-tedora-peach">
-                            <Calendar size={18} />
-                          </Button>
+                          <a href="tel:+8801772322383">
+                            <Button size="sm" variant="outline" className="rounded-full p-2 border-tedora-peach bg-tedora-peach/10 hover:bg-tedora-peach/20 text-tedora-peach">
+                              <Calendar size={18} />
+                            </Button>
+                          </a>
                         </motion.div>
                       </td>
                     </motion.tr>

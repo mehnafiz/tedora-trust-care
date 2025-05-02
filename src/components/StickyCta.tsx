@@ -19,7 +19,7 @@ const StickyCta = () => {
     <AnimatePresence>
       {isVisible && (
         <motion.div 
-          className="md:hidden fixed bottom-6 left-4 right-4 z-40 pointer-events-none"
+          className="fixed bottom-6 left-4 right-4 z-40 pointer-events-none md:bottom-8 md:left-auto md:right-8 md:w-auto"
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 100, opacity: 0 }}
@@ -31,13 +31,13 @@ const StickyCta = () => {
           >
             <a 
               href="tel:+8801772322383"
-              className="bg-gradient-to-r from-tedora-sage to-tedora-sage/90 text-white py-3 rounded-xl flex items-center justify-center gap-2 font-semibold w-full"
+              className="bg-gradient-to-r from-tedora-sage to-tedora-sage/90 text-white py-3 px-6 rounded-xl flex items-center justify-center gap-2 font-semibold w-full"
             >
               <Phone size={18} className="animate-pulse" /> 
               <span>Call Now: +8801772322383</span>
             </a>
 
-            <div className="w-full flex justify-center mt-2">
+            <div className="w-full flex justify-center mt-2 md:hidden">
               <div className="w-12 h-1 bg-gray-200 rounded-full"></div>
             </div>
           </motion.div>

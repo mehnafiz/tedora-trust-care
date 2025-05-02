@@ -41,6 +41,9 @@ const App = () => {
           if (userData && userData.role === "client") {
             setIsClient(true);
             setIsEmployee(false);
+          } else if (userData && userData.role === "employee") {
+            setIsClient(false);
+            setIsEmployee(true);
           } else {
             // Check if user is an employee
             const { data: employee } = await supabase
@@ -50,11 +53,21 @@ const App = () => {
               .single();
 
             if (employee) {
+              // Update user metadata
+              await supabase.auth.updateUser({
+                data: { role: 'employee' }
+              });
+              
               setIsClient(false);
               setIsEmployee(true);
             } else {
-              setIsClient(false);
+              setIsClient(true);
               setIsEmployee(false);
+              
+              // Set as client by default
+              await supabase.auth.updateUser({
+                data: { role: 'client' }
+              });
             }
           }
         } else {
@@ -76,6 +89,9 @@ const App = () => {
         if (userData && userData.role === "client") {
           setIsClient(true);
           setIsEmployee(false);
+        } else if (userData && userData.role === "employee") {
+          setIsClient(false);
+          setIsEmployee(true);
         } else {
           // Check if user is an employee
           const { data: employee } = await supabase
@@ -85,11 +101,21 @@ const App = () => {
             .single();
 
           if (employee) {
+            // Update user metadata
+            await supabase.auth.updateUser({
+              data: { role: 'employee' }
+            });
+            
             setIsClient(false);
             setIsEmployee(true);
           } else {
-            setIsClient(false);
+            setIsClient(true);
             setIsEmployee(false);
+            
+            // Set as client by default
+            await supabase.auth.updateUser({
+              data: { role: 'client' }
+            });
           }
         }
       }
@@ -126,7 +152,18 @@ const App = () => {
                 <Route path="/book-service" element={<BookService />} />
                 <Route path="/family-profile" element={<FamilyProfile />} />
                 <Route path="/invoices" element={<Invoices />} />
-                <Route path="/payment-management" element={<PaymentManagement />} />
+                <Route path="/payment-management" element={
+                  <div className="p-8 text-center">
+                    <div className="mb-8 p-6 bg-amber-50 rounded-lg border border-amber-300">
+                      <h2 className="text-xl font-bold mb-4 text-amber-800">Direct Payment System</h2>
+                      <p className="text-amber-700 mb-4">For payment and booking confirmation, please call us directly 📞</p>
+                      <a href="tel:+8801772322383" className="inline-block bg-tedora-sage text-white px-6 py-3 rounded-full font-medium hover:bg-tedora-sage/90 transition-colors">
+                        Call +8801772322383
+                      </a>
+                    </div>
+                    <p className="text-gray-600">Our customer service team will assist you with payment options and confirm your booking.</p>
+                  </div>
+                } />
               </Route>
               
               {/* Employee-specific routes */}

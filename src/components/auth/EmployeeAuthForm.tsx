@@ -68,8 +68,10 @@ const EmployeeAuthForm = ({ onSuccess }: EmployeeAuthFormProps) => {
         return;
       }
       
-      // The update is removed since the last_login field doesn't exist in the employees table
-      // We could add a timestamp update here if we added that field to the table
+      // Update user metadata to indicate this is an employee
+      await supabase.auth.updateUser({
+        data: { role: 'employee' }
+      });
       
       toast({
         title: "Welcome back",
