@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import {
   Card,
@@ -48,6 +48,16 @@ const EmployeeSchedule = () => {
     }
   ];
 
+  useEffect(() => {
+    // Initialize with today's appointments
+    if (date && 
+        date.getDate() === new Date().getDate() && 
+        date.getMonth() === new Date().getMonth() && 
+        date.getFullYear() === new Date().getFullYear()) {
+      setAppointments(sampleAppointments);
+    }
+  }, []);
+
   const handleCheckIn = (appointmentId: number) => {
     setAppointments(prev => 
       prev.map(app => 
@@ -56,8 +66,19 @@ const EmployeeSchedule = () => {
     );
     
     toast({
-      title: "Checked In",
-      description: "You have successfully checked in for this appointment.",
+      title: "Checked In Successfully",
+      description: "You have checked in for this appointment.",
+      variant: "success"
+    });
+  };
+
+  const handleComplete = (appointmentId: number) => {
+    setAppointments(prev => prev.filter(app => app.id !== appointmentId));
+    
+    toast({
+      title: "Service Completed",
+      description: "The service has been marked as completed.",
+      variant: "success"
     });
   };
 
@@ -80,11 +101,11 @@ const EmployeeSchedule = () => {
     <DashboardLayout>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-1">
-          <Card>
-            <CardHeader>
-              <CardTitle>Calendar</CardTitle>
+          <Card className="bg-white/80 backdrop-blur-sm border border-slate-200 shadow-md">
+            <CardHeader className="bg-gradient-to-r from-tedora-sage/30 to-transparent pb-3">
+              <CardTitle className="text-slate-800">Schedule</CardTitle>
               <CardDescription>
-                Select a date to view your assignments
+                View and manage your assignments
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -93,73 +114,87 @@ const EmployeeSchedule = () => {
                   <Button
                     variant={"outline"}
                     className={cn(
-                      "w-full justify-start text-left font-normal mb-4",
+                      "w-full justify-start text-left font-normal mb-4 border-slate-300 hover:border-tedora-sage",
                       !date && "text-muted-foreground"
                     )}
                   >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    <CalendarIcon className="mr-2 h-4 w-4 text-tedora-sage" />
                     {date ? format(date, "PPP") : <span>Pick a date</span>}
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
+                <PopoverContent className="w-auto p-0" align="start">
                   <Calendar
                     mode="single"
                     selected={date}
                     onSelect={handleDateSelect}
                     initialFocus
+                    className="p-3 pointer-events-auto"
                   />
                 </PopoverContent>
               </Popover>
               
               <div className="mt-6 space-y-2">
-                <h3 className="text-sm font-medium text-gray-700">Upcoming Dates</h3>
+                <h3 className="text-sm font-semibold text-slate-700">Upcoming Dates</h3>
                 
-                <div className="bg-gray-50 p-3 rounded-md">
+                <div className="bg-gradient-to-r from-tedora-sage/20 to-transparent p-3 rounded-md border border-tedora-sage/20">
                   <div className="flex justify-between items-center">
                     <div>
                       <p className="text-sm font-medium">{format(new Date(), "EEEE, MMM d")}</p>
-                      <p className="text-xs text-gray-500">2 appointments</p>
+                      <p className="text-xs text-gray-500">{appointments.length} assignments</p>
                     </div>
-                    <Badge className="bg-tedora-sage">Today</Badge>
+                    <Badge className="bg-tedora-sage text-white">Today</Badge>
                   </div>
                 </div>
                 
-                <div className="bg-white p-3 rounded-md border">
+                <div className="bg-white p-3 rounded-md border border-slate-200 hover:border-tedora-sage/50 transition-colors">
                   <div className="flex justify-between items-center">
                     <div>
                       <p className="text-sm font-medium">{format(new Date(new Date().setDate(new Date().getDate() + 1)), "EEEE, MMM d")}</p>
-                      <p className="text-xs text-gray-500">No appointments</p>
+                      <p className="text-xs text-gray-500">No assignments</p>
                     </div>
                   </div>
                 </div>
                 
-                <div className="bg-white p-3 rounded-md border">
+                <div className="bg-white p-3 rounded-md border border-slate-200 hover:border-tedora-sage/50 transition-colors">
                   <div className="flex justify-between items-center">
                     <div>
                       <p className="text-sm font-medium">{format(new Date(new Date().setDate(new Date().getDate() + 2)), "EEEE, MMM d")}</p>
-                      <p className="text-xs text-gray-500">1 appointment</p>
+                      <p className="text-xs text-gray-500">1 assignment</p>
                     </div>
                   </div>
                 </div>
+              </div>
+              
+              <div className="mt-8 p-4 bg-amber-50 rounded-lg border border-amber-200">
+                <h4 className="font-medium text-amber-800 flex items-center gap-2">
+                  <Clock size={16} />
+                  Need Help?
+                </h4>
+                <p className="text-sm text-amber-700 mt-2">
+                  For schedule adjustments or questions, please contact us directly at:
+                </p>
+                <p className="text-sm font-bold text-amber-900 mt-1">
+                  +8801772322383
+                </p>
               </div>
             </CardContent>
           </Card>
         </div>
         
         <div className="lg:col-span-2">
-          <Card>
-            <CardHeader>
+          <Card className="bg-white/80 backdrop-blur-sm border border-slate-200 shadow-md">
+            <CardHeader className="bg-gradient-to-r from-tedora-sage/30 to-transparent">
               <div className="flex justify-between items-center">
                 <div>
-                  <CardTitle>
-                    Appointments for {date ? format(date, "EEEE, MMMM d, yyyy") : "Today"}
+                  <CardTitle className="text-slate-800">
+                    Assignments for {date ? format(date, "EEEE, MMMM d, yyyy") : "Today"}
                   </CardTitle>
                   <CardDescription>
-                    Your schedule and assignments
+                    Complete your assignments and mark them as done
                   </CardDescription>
                 </div>
                 <Badge 
-                  className={`${appointments.length > 0 ? 'bg-tedora-sage' : 'bg-gray-400'}`}
+                  className={`${appointments.length > 0 ? 'bg-tedora-sage' : 'bg-slate-400'} text-white`}
                 >
                   {appointments.length} {appointments.length === 1 ? 'Assignment' : 'Assignments'}
                 </Badge>
@@ -169,7 +204,7 @@ const EmployeeSchedule = () => {
               {appointments.length > 0 ? (
                 <div className="space-y-4">
                   {appointments.map((appointment) => (
-                    <Card key={appointment.id} className="border-l-4 border-tedora-sage overflow-hidden">
+                    <Card key={appointment.id} className="border-l-4 border-tedora-sage overflow-hidden hover:shadow-md transition-all">
                       <CardContent className="p-4">
                         <div className="flex justify-between items-center mb-3">
                           <div className="flex items-center">
@@ -183,41 +218,52 @@ const EmployeeSchedule = () => {
                                 : appointment.status === 'pending' 
                                 ? 'bg-yellow-500' 
                                 : 'bg-red-500'
-                            }`}
+                            } text-white`}
                           >
                             {appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}
                           </Badge>
                         </div>
                         
-                        <h3 className="font-semibold text-lg">{appointment.serviceType}</h3>
+                        <h3 className="font-semibold text-lg text-tedora-sage">{appointment.serviceType}</h3>
                         
                         <div className="mt-2 space-y-2">
                           <div className="flex items-start">
-                            <User className="h-4 w-4 text-gray-400 mt-1 mr-2" />
+                            <User className="h-4 w-4 text-slate-500 mt-1 mr-2" />
                             <span className="text-sm">{appointment.clientName}</span>
                           </div>
                           <div className="flex items-start">
-                            <MapPin className="h-4 w-4 text-gray-400 mt-1 mr-2" />
+                            <MapPin className="h-4 w-4 text-slate-500 mt-1 mr-2" />
                             <span className="text-sm">{appointment.address}</span>
                           </div>
                         </div>
                         
                         <div className="mt-4 flex justify-end gap-2">
                           {appointment.checkedIn ? (
-                            <Badge className="bg-green-500 flex items-center">
-                              <Check className="h-3 w-3 mr-1" />
-                              Checked In
-                            </Badge>
+                            <div className="flex gap-2">
+                              <Badge className="bg-green-500 flex items-center text-white">
+                                <Check className="h-3 w-3 mr-1" />
+                                Checked In
+                              </Badge>
+                              
+                              <Button 
+                                size="sm"
+                                onClick={() => handleComplete(appointment.id)}
+                                className="bg-tedora-peach hover:bg-tedora-peach/90 text-white"
+                              >
+                                <Check className="h-3 w-3 mr-1" />
+                                Mark Complete
+                              </Button>
+                            </div>
                           ) : (
                             <Button 
                               size="sm"
                               onClick={() => handleCheckIn(appointment.id)}
-                              className="bg-tedora-sage hover:bg-tedora-sage/90"
+                              className="bg-tedora-sage hover:bg-tedora-sage/90 text-white"
                             >
                               Check In
                             </Button>
                           )}
-                          <Button variant="outline" size="sm">
+                          <Button variant="outline" size="sm" className="border-slate-300 hover:bg-slate-50">
                             View Details
                           </Button>
                         </div>
@@ -226,11 +272,16 @@ const EmployeeSchedule = () => {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-20 border-2 border-dashed rounded-lg border-gray-200">
-                  <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-lg font-medium text-gray-500">No appointments for this date</p>
-                  <p className="text-sm text-gray-400 mb-4">
-                    You have no scheduled assignments for the selected date.
+                <div className="text-center py-16 border-2 border-dashed rounded-lg border-gray-200">
+                  <div className="bg-slate-50 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4">
+                    <Calendar className="h-8 w-8 text-slate-400" />
+                  </div>
+                  <p className="text-lg font-medium text-slate-700">No assignments for this date</p>
+                  <p className="text-sm text-gray-500 mb-4 max-w-md mx-auto">
+                    You have no scheduled assignments for the selected date. When clients book services, they will appear here.
+                  </p>
+                  <p className="text-xs text-tedora-sage font-medium">
+                    Check back later or contact the office for more information.
                   </p>
                 </div>
               )}

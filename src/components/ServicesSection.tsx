@@ -1,5 +1,5 @@
 
-import { AlertTriangle, Stethoscope, Calendar } from "lucide-react";
+import { AlertTriangle, Calendar, PhoneCall } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -58,9 +58,13 @@ const ServicesSection = () => {
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <h2 className="section-title font-montserrat mb-16">
+          <h2 className="section-title font-montserrat mb-4 text-center">
             Transparent Pricing for Dhaka Families
           </h2>
+          <p className="text-center text-gray-600 max-w-2xl mx-auto mb-12">
+            Quality care services at competitive rates. For the fastest service, call us directly at 
+            <span className="font-medium text-tedora-sage"> +8801772322383</span>.
+          </p>
         </motion.div>
         
         <motion.div 
@@ -70,30 +74,15 @@ const ServicesSection = () => {
           transition={{ duration: 0.5, delay: 0.2 }}
           viewport={{ once: true }}
         >
-          {/* Stethoscope Icon with Animation */}
-          <div className="absolute -top-12 -left-4 md:-left-10 transform rotate-12 text-primary-500 z-10">
-            <div className="relative">
-              <motion.div
-                animate={{ rotate: [0, 5, 0, -5, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <Stethoscope size={isMobile ? 40 : 56} className="text-[#6BA8A9]" strokeWidth={1.5} />
-                <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
-                  <div className="w-3 h-3 bg-[#FF9E7D] rounded-full animate-pulse"></div>
-                </div>
-              </motion.div>
-            </div>
-          </div>
-          
           {/* Service Price Card with Glass Effect */}
-          <div className="glass-card overflow-hidden">
+          <div className="glass-card overflow-hidden rounded-xl shadow-xl border border-[#6BA8A9]/30">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-gradient-to-r from-[#6BA8A9] to-[#6BA8A9]/90 text-white">
                   <tr>
                     <th className="py-4 px-3 md:px-6 text-left">Service</th>
                     <th className="py-4 px-2 md:px-6 text-left">Time Slot</th>
-                    <th className="py-4 px-3 md:px-6 text-right">Price</th>
+                    <th className="py-4 px-3 md:px-6 text-right">Price (৳)</th>
                     <th className="py-4 px-2 md:px-4 text-right">Book</th>
                   </tr>
                 </thead>
@@ -110,7 +99,7 @@ const ServicesSection = () => {
                       <td className="py-4 px-2 md:px-6 text-gray-600 text-sm md:text-base">{service.timeSlot}</td>
                       <td className="py-4 px-3 md:px-6 text-right">
                         <div className="flex flex-col items-end">
-                          <span className="font-bold text-tedora-sage">৳{service.price}</span>
+                          <span className="font-bold text-tedora-sage">{service.price}</span>
                           <span className="text-xs text-gray-500">{service.minTime}</span>
                         </div>
                       </td>
@@ -121,7 +110,7 @@ const ServicesSection = () => {
                         >
                           <a href="tel:+8801772322383">
                             <Button size="sm" variant="outline" className="rounded-full p-2 border-tedora-peach bg-tedora-peach/10 hover:bg-tedora-peach/20 text-tedora-peach">
-                              <Calendar size={18} />
+                              <PhoneCall size={18} />
                             </Button>
                           </a>
                         </motion.div>
@@ -135,7 +124,7 @@ const ServicesSection = () => {
           
           {/* Promo Disclaimer */}
           <motion.div 
-            className="mt-6 bg-gradient-to-r from-red-50 to-orange-50 border border-red-100 rounded-xl p-5 flex gap-3 items-start shadow-sm"
+            className="mt-6 bg-gradient-to-r from-red-50 to-orange-50 border border-red-100 rounded-xl p-5 flex gap-3 items-center shadow-sm"
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.4 }}
@@ -144,9 +133,14 @@ const ServicesSection = () => {
             <div className="p-2 bg-white/80 rounded-full">
               <AlertTriangle size={20} className="text-[#FF9E7D]" />
             </div>
-            <p className="text-red-700 font-medium">
-              First 20 Clients Get 15% OFF – Call Now at +8801772322383!
-            </p>
+            <div>
+              <p className="text-red-700 font-medium">
+                First 20 Clients Get 15% OFF!
+              </p>
+              <p className="text-red-600 text-sm">
+                Call Now at +8801772322383 for the fastest service.
+              </p>
+            </div>
           </motion.div>
         </motion.div>
       </div>

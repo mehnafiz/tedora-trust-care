@@ -8,7 +8,6 @@ import {
   LayoutDashboard,
   Calendar,
   Users,
-  FileText,
   MessageCircle,
   LogOut,
   Menu,
@@ -17,8 +16,8 @@ import {
   Clock,
   FileMinus,
   Bell,
-  Star,
   ChevronDown,
+  PhoneCall,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -91,16 +90,6 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         icon: <Calendar className="h-5 w-5" />,
       },
       {
-        name: "Family Profile",
-        path: "/family-profile",
-        icon: <Users className="h-5 w-5" />,
-      },
-      {
-        name: "Invoices",
-        path: "/invoices",
-        icon: <FileText className="h-5 w-5" />,
-      },
-      {
         name: "Payment Management",
         path: "/payment-management",
         icon: <CreditCard className="h-5 w-5" />,
@@ -116,17 +105,17 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       {
         name: "Service Reports",
         path: "/reports",
-        icon: <FileText className="h-5 w-5" />,
-      },
-      {
-        name: "Payroll",
-        path: "/payroll",
-        icon: <CreditCard className="h-5 w-5" />,
+        icon: <Clock className="h-5 w-5" />,
       },
       {
         name: "Leave Requests",
         path: "/leave-requests",
         icon: <FileMinus className="h-5 w-5" />,
+      },
+      {
+        name: "Payroll",
+        path: "/payroll",
+        icon: <CreditCard className="h-5 w-5" />,
       },
     ];
 
@@ -203,14 +192,6 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             <DropdownMenuContent align="start" className="w-56">
               <DropdownMenuLabel>Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              {isClient && (
-                <DropdownMenuItem 
-                  onClick={() => navigate('/family-profile')}
-                  className="cursor-pointer"
-                >
-                  Manage Profile
-                </DropdownMenuItem>
-              )}
               <DropdownMenuItem 
                 onClick={handleLogout}
                 className="text-red-500 cursor-pointer"
@@ -243,6 +224,25 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           </ul>
         </nav>
 
+        {/* Contact section */}
+        <div className="p-4 border-t mt-auto">
+          <div className="bg-gradient-to-r from-tedora-sage/10 to-transparent p-3 rounded-lg">
+            <div className="flex items-center gap-2 mb-2">
+              <PhoneCall className="h-4 w-4 text-tedora-sage" />
+              <p className="text-sm font-medium text-tedora-sage">Need Help?</p>
+            </div>
+            <p className="text-xs text-gray-600 mb-2">For the fastest service, call us directly</p>
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full border-tedora-sage text-tedora-sage hover:bg-tedora-sage/10"
+              onClick={() => window.location.href = "tel:+8801772322383"}
+            >
+              +8801772322383
+            </Button>
+          </div>
+        </div>
+
         {/* Logout button */}
         <div className="p-4 border-t">
           <Button
@@ -266,14 +266,10 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                 ? "Dashboard"
                 : location.pathname === "/book-service"
                 ? "Book Services"
-                : location.pathname === "/family-profile"
-                ? "Family Profile"
                 : location.pathname === "/schedule"
                 ? "My Schedule"
                 : location.pathname === "/chat"
                 ? "Chat Support"
-                : location.pathname === "/invoices"
-                ? "Invoices"
                 : location.pathname === "/payment-management"
                 ? "Payment Management"
                 : location.pathname === "/reports"
@@ -285,6 +281,14 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                 : ""}
             </h1>
             <div className="flex items-center gap-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="rounded-full"
+                onClick={() => window.location.href = "tel:+8801772322383"}
+              >
+                <PhoneCall className="h-4 w-4 text-tedora-sage" />
+              </Button>
               <Button variant="outline" size="sm" className="rounded-full">
                 <Bell className="h-4 w-4" />
               </Button>

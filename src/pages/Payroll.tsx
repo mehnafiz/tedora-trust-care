@@ -1,165 +1,120 @@
 
 import { useState } from "react";
+import { PhoneCall, Mail, Building, FileText } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DashboardLayout from "@/components/layout/DashboardLayout";
+import { useToast } from "@/hooks/use-toast";
 
 const Payroll = () => {
-  const [selectedMonth, setSelectedMonth] = useState("current");
+  const { toast } = useToast();
   
-  // Demo payroll data
-  const payrollData = {
-    current: {
-      month: "May 2025",
-      baseSalary: 35000,
-      bonus: 3000,
-      overtimeHours: 8,
-      overtimePay: 2000,
-      deductions: 1500,
-      netPay: 38500,
-      paymentStatus: "Pending",
-      paymentDate: "31 May 2025"
-    },
-    previous: {
-      month: "April 2025",
-      baseSalary: 35000,
-      bonus: 0,
-      overtimeHours: 4,
-      overtimePay: 1000,
-      deductions: 1500,
-      netPay: 34500,
-      paymentStatus: "Paid",
-      paymentDate: "30 April 2025"
-    }
+  const handleCallNow = () => {
+    toast({
+      title: "Calling TEDora+ Finance",
+      description: "Redirecting you to call our finance department",
+    });
+    window.location.href = "tel:+8801772322383";
   };
-  
-  const payslip = payrollData[selectedMonth as keyof typeof payrollData];
-  
-  // Demo attendance data
-  const attendanceData = [
-    { date: "01 May 2025", checkIn: "08:15 AM", checkOut: "05:05 PM", hours: 8, status: "Present" },
-    { date: "02 May 2025", checkIn: "08:10 AM", checkOut: "05:00 PM", hours: 8, status: "Present" },
-    { date: "03 May 2025", checkIn: "08:05 AM", checkOut: "06:00 PM", hours: 10, status: "Overtime" },
-    { date: "04 May 2025", checkIn: "08:00 AM", checkOut: "05:30 PM", hours: 9.5, status: "Overtime" },
-    { date: "05 May 2025", checkIn: "-", checkOut: "-", hours: 0, status: "Leave" },
-  ];
 
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-montserrat font-bold">Payroll Information</h2>
-          <Tabs defaultValue="current" onValueChange={setSelectedMonth} className="w-[300px]">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="current">Current Month</TabsTrigger>
-              <TabsTrigger value="previous">Previous Month</TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
+        <h2 className="text-xl font-montserrat font-bold">Payroll Information</h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm text-gray-500">Net Pay</CardTitle>
+        <Card className="border border-slate-200 shadow-md overflow-hidden">
+          <div className="bg-gradient-to-r from-tedora-peach to-tedora-peach/70 p-6">
+            <CardHeader className="p-0 pb-6">
+              <CardTitle className="text-white text-2xl">TEDora+ Staff Payroll</CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold">৳ {payslip.netPay.toLocaleString()}</p>
-              <p className="text-xs text-gray-500 mt-1">{payslip.month}</p>
-            </CardContent>
-          </Card>
+            <p className="text-white/90">
+              Our online payroll system is currently being enhanced to provide you with more features.
+              For now, please use the direct contact methods below for any payroll-related inquiries.
+            </p>
+          </div>
           
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm text-gray-500">Payment Status</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center">
-                <span className={`inline-block w-3 h-3 rounded-full mr-2 ${
-                  payslip.paymentStatus === "Paid" ? "bg-green-500" : "bg-amber-500"
-                }`}></span>
-                <p className="text-lg font-semibold">{payslip.paymentStatus}</p>
-              </div>
-              <p className="text-xs text-gray-500 mt-1">
-                {payslip.paymentStatus === "Paid" ? "Paid on" : "Expected"}: {payslip.paymentDate}
-              </p>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm text-gray-500">Bonus & Overtime</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold">৳ {(payslip.bonus + payslip.overtimePay).toLocaleString()}</p>
-              <p className="text-xs text-gray-500 mt-1">{payslip.overtimeHours} overtime hours</p>
-            </CardContent>
-          </Card>
-        </div>
-        
-        <Card>
-          <CardHeader>
-            <CardTitle>Salary Breakdown</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex justify-between py-2 border-b">
-                <span>Base Salary</span>
-                <span className="font-semibold">৳ {payslip.baseSalary.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between py-2 border-b">
-                <span>Overtime Pay</span>
-                <span className="font-semibold">৳ {payslip.overtimePay.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between py-2 border-b">
-                <span>Bonus</span>
-                <span className="font-semibold">৳ {payslip.bonus.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between py-2 border-b">
-                <span>Deductions</span>
-                <span className="font-semibold text-red-500">- ৳ {payslip.deductions.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between py-2 font-bold">
-                <span>Net Pay</span>
-                <span>৳ {payslip.netPay.toLocaleString()}</span>
+          <CardContent className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <Card className="border border-slate-200 bg-white shadow-sm hover:shadow-md transition-shadow">
+                <CardContent className="pt-6 flex flex-col items-center text-center">
+                  <div className="w-12 h-12 bg-tedora-peach/10 rounded-full flex items-center justify-center mb-4">
+                    <PhoneCall className="h-6 w-6 text-tedora-peach" />
+                  </div>
+                  <h3 className="font-medium text-lg mb-2">Call Finance</h3>
+                  <p className="text-sm text-slate-600 mb-4">
+                    For immediate assistance regarding your salary, payments, or reimbursements.
+                  </p>
+                  <Button 
+                    onClick={handleCallNow}
+                    className="bg-tedora-peach hover:bg-tedora-peach/90 text-white w-full"
+                  >
+                    Call Now: +8801772322383
+                  </Button>
+                </CardContent>
+              </Card>
+              
+              <Card className="border border-slate-200 bg-white shadow-sm hover:shadow-md transition-shadow">
+                <CardContent className="pt-6 flex flex-col items-center text-center">
+                  <div className="w-12 h-12 bg-tedora-sage/10 rounded-full flex items-center justify-center mb-4">
+                    <Mail className="h-6 w-6 text-tedora-sage" />
+                  </div>
+                  <h3 className="font-medium text-lg mb-2">Email Finance</h3>
+                  <p className="text-sm text-slate-600 mb-4">
+                    Send your payroll inquiries or documentation to our finance department.
+                  </p>
+                  <Button 
+                    variant="outline"
+                    className="border-tedora-sage text-tedora-sage hover:bg-tedora-sage/10 w-full"
+                    onClick={() => window.location.href = "mailto:finance@tedoraplus.com"}
+                  >
+                    Email: finance@tedoraplus.com
+                  </Button>
+                </CardContent>
+              </Card>
+              
+              <Card className="border border-slate-200 bg-white shadow-sm hover:shadow-md transition-shadow">
+                <CardContent className="pt-6 flex flex-col items-center text-center">
+                  <div className="w-12 h-12 bg-blue-500/10 rounded-full flex items-center justify-center mb-4">
+                    <Building className="h-6 w-6 text-blue-500" />
+                  </div>
+                  <h3 className="font-medium text-lg mb-2">Visit Finance Office</h3>
+                  <p className="text-sm text-slate-600 mb-4">
+                    Visit our finance office in person for payroll discussions.
+                  </p>
+                  <Button 
+                    variant="outline"
+                    className="border-blue-500 text-blue-500 hover:bg-blue-500/10 w-full"
+                  >
+                    10AM - 4PM, Monday to Thursday
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+            
+            <div className="mt-8 p-6 bg-slate-50 rounded-lg border border-slate-200">
+              <h3 className="font-medium text-slate-800 mb-4 flex items-center gap-2">
+                <FileText className="h-5 w-5 text-tedora-sage" />
+                Payroll Schedule
+              </h3>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center p-3 bg-white rounded border border-slate-200">
+                  <span className="font-medium">Monthly Salary</span>
+                  <span>Paid on the 1st of each month</span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-white rounded border border-slate-200">
+                  <span className="font-medium">Service Bonuses</span>
+                  <span>Calculated weekly, paid monthly</span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-white rounded border border-slate-200">
+                  <span className="font-medium">Overtime</span>
+                  <span>Included in next month's payment</span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-white rounded border border-slate-200">
+                  <span className="font-medium">Reimbursements</span>
+                  <span>Processed within 7 working days</span>
+                </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
-        
-        <h2 className="text-xl font-montserrat font-bold mt-8">Attendance Record</h2>
-        <Card>
-          <CardContent className="pt-6">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Check In</TableHead>
-                  <TableHead>Check Out</TableHead>
-                  <TableHead>Hours</TableHead>
-                  <TableHead>Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {attendanceData.map((record, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{record.date}</TableCell>
-                    <TableCell>{record.checkIn}</TableCell>
-                    <TableCell>{record.checkOut}</TableCell>
-                    <TableCell>{record.hours}</TableCell>
-                    <TableCell>
-                      <span className={`px-2 py-1 rounded-full text-xs ${
-                        record.status === "Present" ? "bg-green-100 text-green-800" :
-                        record.status === "Overtime" ? "bg-blue-100 text-blue-800" :
-                        "bg-amber-100 text-amber-800"
-                      }`}>
-                        {record.status}
-                      </span>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
           </CardContent>
         </Card>
       </div>
