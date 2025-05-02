@@ -40,9 +40,9 @@ export const ServicesCard = ({ services, onBookService }: ServicesCardProps) => 
               </div>
               
               <div className="flex items-center mt-2">
-                <div className="text-xl font-bold text-tedora-peach flex items-center">
-                  <span>৳</span>
-                  <span className="ml-1">{service.price}</span>
+                <div className="text-xl font-bold text-tedora-peach">
+                  {/* Fixed: Only show the Taka symbol once */}
+                  <span>৳ {service.price}</span>
                 </div>
               </div>
               

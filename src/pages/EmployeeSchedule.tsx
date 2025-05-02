@@ -68,7 +68,8 @@ const EmployeeSchedule = () => {
     toast({
       title: "Checked In Successfully",
       description: "You have checked in for this appointment.",
-      variant: "success"
+      // Fix the build error - change "success" to "default"
+      variant: "default"
     });
   };
 
@@ -78,7 +79,8 @@ const EmployeeSchedule = () => {
     toast({
       title: "Service Completed",
       description: "The service has been marked as completed.",
-      variant: "success"
+      // Fix the build error - change "success" to "default" 
+      variant: "default"
     });
   };
 
@@ -99,7 +101,7 @@ const EmployeeSchedule = () => {
 
   return (
     <DashboardLayout>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8">
         <div className="lg:col-span-1">
           <Card className="bg-white/80 backdrop-blur-sm border border-slate-200 shadow-md">
             <CardHeader className="bg-gradient-to-r from-tedora-sage/30 to-transparent pb-3">

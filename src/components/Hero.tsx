@@ -154,11 +154,8 @@ const Hero = () => {
                         animate={{ scale: [1, 1.1, 1] }}
                         transition={{ duration: 3, repeat: Infinity }}
                       >
-                        <img 
-                          src="/lovable-uploads/211ff065-3b7c-4b1b-8acd-38254c7f827b.png" 
-                          alt="Childcare" 
-                          className="h-10 w-auto rounded-full" 
-                        />
+                        {/* Removed image and replaced with icon */}
+                        <Sparkles className="h-8 w-8 text-tedora-sage" />
                       </motion.div>
                     </div>
                     <div className="text-2xl font-playfair font-bold text-gray-800 mb-2">Childcare</div>
@@ -176,11 +173,8 @@ const Hero = () => {
                         animate={{ scale: [1, 1.1, 1] }}
                         transition={{ duration: 3.5, repeat: Infinity, delay: 0.5 }}
                       >
-                        <img 
-                          src="/lovable-uploads/2742d846-9da9-4ccf-976d-8b54cd790173.png" 
-                          alt="Elderly Care" 
-                          className="h-10 w-auto rounded-full" 
-                        />
+                        {/* Removed image and replaced with icon */}
+                        <Check className="h-8 w-8 text-tedora-peach" />
                       </motion.div>
                     </div>
                     <div className="text-2xl font-playfair font-bold text-gray-800 mb-2">Elderly Care</div>
