@@ -51,19 +51,7 @@ const ServicesSection = () => {
       id="services" 
       className="py-16 sm:py-20 bg-gradient-to-br from-white via-[#F9F7F4] to-[#F5F5F5]/80 relative overflow-hidden"
     >
-      {/* Stethoscope icon at top left */}
-      <motion.div 
-        className="absolute -top-2 -left-2 lg:top-4 lg:left-8 z-10 hidden sm:block"
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.5, duration: 0.8 }}
-      >
-        <div className="bg-white/70 backdrop-blur-sm p-4 rounded-full shadow-lg border border-tedora-sage/20">
-          <Stethoscope className="text-tedora-sage w-10 h-10 lg:w-14 lg:h-14" />
-        </div>
-      </motion.div>
-      
-      {/* Cartoon doctor at bottom right */}
+      {/* Doctor image at bottom right */}
       <motion.div 
         className="absolute -bottom-4 -right-4 md:bottom-0 md:right-2 lg:bottom-4 lg:right-8 z-10 hidden sm:block"
         initial={{ opacity: 0, y: 20 }}
@@ -71,36 +59,11 @@ const ServicesSection = () => {
         transition={{ delay: 0.8, duration: 0.8 }}
       >
         <div className="bg-white/70 backdrop-blur-sm p-2 rounded-full shadow-lg border border-tedora-peach/30 flex items-center justify-center">
-          <div className="relative">
-            <svg width="90" height="90" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-              {/* Face */}
-              <circle cx="50" cy="50" r="45" fill="#FFD7B5" />
-              {/* Hair */}
-              <path d="M50 10 C30 10 15 25 15 45 C15 25 30 5 50 5 C70 5 85 25 85 45 C85 25 70 10 50 10" fill="#8B4513" />
-              {/* Eyes */}
-              <circle cx="35" cy="40" r="5" fill="#333" />
-              <circle cx="65" cy="40" r="5" fill="#333" />
-              {/* Smile */}
-              <path d="M35 60 Q50 75 65 60" fill="none" stroke="#333" strokeWidth="3" />
-              {/* Doctor coat */}
-              <path d="M25 95 L25 70 L75 70 L75 95" fill="#fff" stroke="#eee" strokeWidth="2" />
-              {/* Stethoscope */}
-              <path d="M40 75 Q 50 85 60 75" fill="none" stroke="#6BA8A9" strokeWidth="3" />
-              <circle cx="40" cy="75" r="3" fill="#6BA8A9" />
-            </svg>
-            {/* Happy face expression with animated blinking */}
-            <motion.div 
-              animate={{ 
-                scaleY: [1, 0.1, 1],
-                transition: { 
-                  repeat: Infinity, 
-                  repeatDelay: 3,
-                  duration: 0.2
-                }
-              }}
-              className="absolute top-[40px] left-[65px] w-10 h-5 bg-transparent pointer-events-none"
-            />
-          </div>
+          <img 
+            src="/lovable-uploads/b56ff574-88e9-4d7d-abe0-9229542a65bc.png" 
+            alt="Doctor" 
+            className="w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 object-contain"
+          />
         </div>
       </motion.div>
 

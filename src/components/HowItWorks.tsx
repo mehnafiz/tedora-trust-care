@@ -1,5 +1,5 @@
 
-import { Phone, UserCheck, Coffee } from "lucide-react";
+import { Phone, UserCheck, Coffee, Stethoscope } from "lucide-react";
 import { motion } from "framer-motion";
 
 const HowItWorks = () => {
@@ -26,6 +26,18 @@ const HowItWorks = () => {
       id="how-it-works"
       className="py-16 sm:py-20 lg:py-24 bg-gradient-to-br from-[#F5F5F5] via-white to-[#F5F5F5]/30 relative overflow-hidden"
     >
+      {/* Stethoscope icon at top left */}
+      <motion.div 
+        className="absolute -top-2 -left-2 lg:top-4 lg:left-8 z-10 hidden sm:block"
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.5, duration: 0.8 }}
+      >
+        <div className="bg-white/70 backdrop-blur-sm p-4 rounded-full shadow-lg border border-tedora-sage/20">
+          <Stethoscope className="text-tedora-sage w-10 h-10 lg:w-14 lg:h-14" />
+        </div>
+      </motion.div>
+      
       {/* Decorative elements */}
       <div className="absolute top-0 left-0 w-full h-20 bg-gradient-to-b from-white to-transparent"></div>
       <div className="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-white to-transparent"></div>
