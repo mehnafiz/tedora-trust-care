@@ -3,6 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Clock, Calendar, PhoneCall } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Separator } from '@/components/ui/separator';
 
 interface Service {
   name: string;
@@ -17,7 +18,7 @@ interface ServicesCardProps {
 
 export const ServicesCard = ({ services, onBookService }: ServicesCardProps) => {
   return (
-    <Card className="bg-white/90 backdrop-blur-sm border border-[#6BA8A9]/20 shadow-md mt-6">
+    <Card className="bg-white/90 backdrop-blur-sm border border-[#6BA8A9]/20 shadow-lg mt-6 overflow-hidden rounded-xl">
       <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-6">
         {services.map((service, index) => (
           <motion.div
@@ -26,9 +27,9 @@ export const ServicesCard = ({ services, onBookService }: ServicesCardProps) => 
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: index * 0.1 }}
             whileHover={{ scale: 1.02 }}
-            className="relative overflow-hidden rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-all"
+            className="relative overflow-hidden rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-all bg-gradient-to-br from-white to-slate-50/60"
           >
-            <div className="absolute top-0 right-0 bg-tedora-sage text-white px-2 py-1 text-xs font-medium">
+            <div className="absolute top-0 right-0 bg-tedora-sage text-white px-2 py-1 text-xs font-medium rounded-bl-lg">
               Popular
             </div>
             <div className="p-5">
@@ -39,10 +40,11 @@ export const ServicesCard = ({ services, onBookService }: ServicesCardProps) => 
                 <span>{service.timeSlot}</span>
               </div>
               
-              <div className="flex items-center mt-2">
+              <Separator className="my-3 bg-slate-100" />
+              
+              <div className="flex items-center">
                 <div className="text-xl font-bold text-tedora-peach">
-                  {/* Fixed: Only show the Taka symbol once */}
-                  <span>৳ {service.price}</span>
+                  ৳ {service.price}
                 </div>
               </div>
               
