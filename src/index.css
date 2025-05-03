@@ -47,16 +47,28 @@
     text-size-adjust: 100%; /* Prevent text size adjustment on orientation change */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
   }
 
   body {
     @apply bg-background text-foreground;
     font-family: 'Open Sans', sans-serif;
     overflow-x: hidden;
+    max-width: 100vw;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Playfair Display', serif;
+  }
+  
+  /* Fix iOS text size adjust */
+  input, textarea, select, button {
+    font-size: 16px;
+  }
+  
+  /* Improve tap targets on mobile */
+  button, a, [role="button"] {
+    @apply touch-manipulation;
   }
 }
 
@@ -79,7 +91,7 @@
   }
 
   .section-title {
-    @apply text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-6 sm:mb-10 font-playfair text-gray-800 relative;
+    @apply text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-6 sm:mb-10 font-playfair text-gray-800 relative pb-4;
   }
   
   .section-title::after {
@@ -108,7 +120,7 @@
   }
   
   .animated-divider {
-    @apply relative h-8 sm:h-12 overflow-hidden my-6 sm:my-8;
+    @apply relative h-6 sm:h-8 md:h-12 overflow-hidden my-4 sm:my-6 md:my-8;
   }
   
   .animated-divider::before {
@@ -118,13 +130,19 @@
   
   .animated-divider::after {
     content: '';
-    @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 sm:w-8 h-6 sm:h-8 bg-tedora-peach/20 rounded-full animate-pulse;
+    @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 sm:w-6 md:w-8 h-4 sm:h-6 md:h-8 bg-tedora-peach/20 rounded-full animate-pulse;
   }
 
   .sparkle {
     @apply absolute w-1 h-1 bg-white rounded-full;
     box-shadow: 0 0 5px 1px rgba(255, 255, 255, 0.6);
     animation: sparkle-animation 2s ease-in-out infinite;
+  }
+  
+  /* Optimize images */
+  img {
+    @apply max-w-full h-auto;
+    content-visibility: auto;
   }
 }
 
@@ -163,6 +181,29 @@
   
   .content-visibility-auto {
     content-visibility: auto;
+  }
+  
+  /* Responsive spacing helpers */
+  .safe-x-padding {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+  
+  .safe-y-padding {
+    padding-top: max(1rem, env(safe-area-inset-top));
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+  
+  /* Fix for notched phones */
+  .notch-aware {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  /* Touch-friendly sizing */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
   }
 }
 
@@ -212,17 +253,45 @@
 /* Mobile optimizations */
 @media screen and (max-width: 640px) {
   .container {
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
   }
   
   .section {
-    padding-top: 2.5rem;
-    padding-bottom: 2.5rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+  
+  /* Improve small tap targets */
+  button, a, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Prevent text overflow */
+  h1, h2, h3, p {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    -ms-word-break: break-all;
+    word-break: break-word;
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
   }
 }
 
 /* Optimize rendering performance */
 * {
   text-rendering: optimizeLegibility;
+}
+
+/* Fix iOS momentum scrolling */
+.momentum-scroll {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Improve scrolling performance */
+.smooth-scroll {
+  scroll-behavior: smooth;
 }

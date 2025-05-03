@@ -39,13 +39,14 @@ const TeamSection = () => {
     }
   ];
 
-  // Preload images
+  // Preload images with priority
   useEffect(() => {
     const preloadImages = () => {
       team.forEach((member) => {
         if (member.image) {
           const img = new Image();
           img.src = member.image;
+          img.fetchPriority = 'high';
           img.onload = () => {
             setImagesLoaded(prev => ({
               ...prev,
@@ -68,7 +69,7 @@ const TeamSection = () => {
 
   if (!isValidEmployee && !isLoading) {
     return (
-      <section id="team" className="py-16 bg-tedora-cream/30">
+      <section id="team" className="py-12 sm:py-16 bg-tedora-cream/30">
         <div className="container mx-auto px-4">
           <h2 className="section-title">Founders</h2>
           <Card className="p-6 text-center bg-white/90 backdrop-blur-sm">
@@ -82,7 +83,7 @@ const TeamSection = () => {
   }
 
   return (
-    <section id="team" className="py-16 bg-tedora-cream/30">
+    <section id="team" className="py-12 sm:py-16 bg-tedora-cream/30">
       <div className="container mx-auto px-4">
         <motion.h2 
           className="section-title"
@@ -94,18 +95,18 @@ const TeamSection = () => {
           Founders
         </motion.h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           {team.map((member, index) => (
             <motion.div 
               key={index}
-              className="bg-white rounded-lg p-6 text-center shadow-md card-hover"
+              className="bg-white rounded-lg p-4 sm:p-6 text-center shadow-md card-hover"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               viewport={{ once: true }}
               whileHover={{ y: -5, transition: { duration: 0.2 } }}
             >
-              <div className="mx-auto w-32 h-32 rounded-full overflow-hidden mb-4 shadow-md border-4 border-tedora-sage/20 bg-gray-100 flex items-center justify-center">
+              <div className="mx-auto w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden mb-3 sm:mb-4 shadow-md border-4 border-tedora-sage/20 bg-gray-100 flex items-center justify-center">
                 {member.image ? (
                   <>
                     {!imagesLoaded[member.image] && (
@@ -123,6 +124,7 @@ const TeamSection = () => {
                         objectFit: 'cover',
                         display: imagesLoaded[member.image] ? 'block' : 'none'
                       }}
+                      fetchPriority="high"
                     />
                   </>
                 ) : (
@@ -130,9 +132,9 @@ const TeamSection = () => {
                 )}
               </div>
               
-              <h3 className="text-xl font-bold font-playfair text-gray-800">{member.name}</h3>
-              <p className="text-tedora-sage font-medium mt-1">{member.role}</p>
-              <p className="text-gray-600 mt-2">{member.description}</p>
+              <h3 className="text-lg sm:text-xl font-bold font-playfair text-gray-800">{member.name}</h3>
+              <p className="text-tedora-sage font-medium mt-1 text-sm sm:text-base">{member.role}</p>
+              <p className="text-gray-600 mt-1 sm:mt-2 text-xs sm:text-sm">{member.description}</p>
             </motion.div>
           ))}
         </div>
