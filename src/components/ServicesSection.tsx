@@ -51,18 +51,31 @@ const ServicesSection = () => {
       id="services" 
       className="py-16 sm:py-20 bg-gradient-to-br from-white via-[#F9F7F4] to-[#F5F5F5]/80 relative overflow-hidden"
     >
-      {/* Doctor image at bottom right */}
+      {/* Stethoscope at top left of pricing table */}
       <motion.div 
-        className="absolute -bottom-4 -right-4 md:bottom-0 md:right-2 lg:bottom-4 lg:right-8 z-10 hidden sm:block"
+        className="absolute -top-6 -left-6 lg:-top-4 lg:-left-4 z-10"
+        initial={{ opacity: 0, y: -10, x: -10 }}
+        animate={{ opacity: 1, y: 0, x: 0 }}
+        transition={{ delay: 0.5, duration: 0.8 }}
+      >
+        <div className="bg-white/80 backdrop-blur-sm p-2 lg:p-3 rounded-full shadow-md border border-tedora-sage/30 flex items-center justify-center">
+          <Stethoscope className="text-tedora-sage w-8 h-8 lg:w-10 lg:h-10" />
+        </div>
+      </motion.div>
+      
+      {/* Doctor image at bottom right of pricing table - with background removed */}
+      <motion.div 
+        className="absolute -bottom-6 -right-6 sm:-bottom-4 sm:-right-2 lg:-bottom-2 lg:right-2 z-10"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.8, duration: 0.8 }}
       >
-        <div className="bg-white/70 backdrop-blur-sm p-2 rounded-full shadow-lg border border-tedora-peach/30 flex items-center justify-center">
+        <div className="flex items-end justify-end">
           <img 
             src="/lovable-uploads/b56ff574-88e9-4d7d-abe0-9229542a65bc.png" 
-            alt="Doctor" 
+            alt="Cartoon Doctor" 
             className="w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 object-contain"
+            style={{ filter: "drop-shadow(0px 3px 6px rgba(0,0,0,0.2))" }}
           />
         </div>
       </motion.div>
