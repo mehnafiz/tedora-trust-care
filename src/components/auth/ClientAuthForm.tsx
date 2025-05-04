@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 interface ClientAuthFormProps {
@@ -260,7 +260,11 @@ const ClientAuthForm = ({ isSignup, setIsSignup, onSuccess, toast }: ClientAuthF
           className="w-full bg-[#6BA8A9] hover:bg-[#6BA8A9]/90 text-white"
           disabled={isLoading}
         >
-          {isLoading ? "Processing..." : (isSignup ? "Create Account" : "Login")}
+          {isLoading ? (
+            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...</>
+          ) : (
+            isSignup ? "Create Account" : "Login"
+          )}
         </Button>
       </div>
 

@@ -21,7 +21,7 @@ const AuthFormContainer = ({ selectedRole, onBack, onSuccess }: AuthFormContaine
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.4 }}
-      className="w-full max-w-lg glass-card p-8 relative"
+      className="w-full max-w-lg glass-card p-6 sm:p-8 relative"
     >
       {/* Security badge */}
       <div className="absolute -top-4 -right-4 bg-white rounded-full p-2 shadow-md">
@@ -32,8 +32,8 @@ const AuthFormContainer = ({ selectedRole, onBack, onSuccess }: AuthFormContaine
       <div className="absolute -top-3 -left-3 w-16 h-16 bg-tedora-sage/10 rounded-full -z-10"></div>
       <div className="absolute -bottom-3 -right-3 w-16 h-16 bg-tedora-peach/10 rounded-full -z-10"></div>
       
-      <div className="flex justify-between items-center mb-8">
-        <div className="flex items-center gap-3">
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-6 sm:mb-8">
+        <div className="flex items-center gap-3 mb-4 sm:mb-0">
           <motion.div
             className="p-2 bg-gray-100/80 rounded-full"
             whileHover={{ scale: 1.05 }}
@@ -45,17 +45,20 @@ const AuthFormContainer = ({ selectedRole, onBack, onSuccess }: AuthFormContaine
               <UserCheck className="h-6 w-6 text-tedora-peach" />
             )}
           </motion.div>
-          <motion.h2 
-            className="text-2xl font-montserrat font-bold"
-            key={`${selectedRole}-${isSignup}`}
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            {selectedRole === "client" 
-              ? (isSignup ? "Create Family Account" : "Access Your Account") 
-              : "Employee Login"}
-          </motion.h2>
+          <div>
+            <motion.h2 
+              className="text-xl sm:text-2xl font-montserrat font-bold"
+              key={`${selectedRole}-${isSignup}`}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              {selectedRole === "client" 
+                ? (isSignup ? "Create Family Account" : "Access Your Account") 
+                : "Employee Login"}
+            </motion.h2>
+            <p className="text-sm text-gray-500">TEDora+ | Trust Everyday Care</p>
+          </div>
         </div>
         
         <motion.button 

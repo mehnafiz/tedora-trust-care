@@ -31,6 +31,8 @@ export const DashboardHeader = ({ toggleSidebar }: DashboardHeaderProps) => {
         return "Leave Requests";
       case "/invoices":
         return "Invoices";
+      case "/family-profile":
+        return "Family Profile";
       default:
         return "";
     }
@@ -38,9 +40,14 @@ export const DashboardHeader = ({ toggleSidebar }: DashboardHeaderProps) => {
 
   return (
     <div className="mb-6 bg-white rounded-lg shadow-sm p-3 flex justify-between items-center">
-      <h1 className="text-xl font-montserrat font-bold text-gray-800">
-        {getPageTitle()}
-      </h1>
+      <div>
+        <h1 className="text-xl font-montserrat font-bold text-gray-800">
+          {getPageTitle()}
+        </h1>
+        <p className="text-sm text-gray-500 hidden sm:block">
+          TEDora+ | Trust Everyday Care
+        </p>
+      </div>
       <div className="flex items-center gap-2">
         <Button 
           variant="outline" 
