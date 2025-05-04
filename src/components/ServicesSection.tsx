@@ -26,7 +26,7 @@ const ServicesSection = () => {
     {
       name: "Evening Care 🌙",
       timeSlot: "6 PM – 10 PM",
-      price: "329/hour",
+      price: "349/hour",
       minTime: "(Min: 2hr)"
     },
     {
@@ -42,7 +42,7 @@ const ServicesSection = () => {
       minTime: ""
     },
     {
-      name: "Elderly Care 🍲",
+      name: "Elderly Care",
       timeSlot: "8 AM – 8 PM",
       price: "1,199/day",
       minTime: ""
@@ -50,7 +50,7 @@ const ServicesSection = () => {
     {
       name: "Weekend Package",
       timeSlot: "Fri + Sat (Hourly)",
-      price: "395/hour",
+      price: "399/hour",
       minTime: "(Min: 2hr)"
     }
   ];
