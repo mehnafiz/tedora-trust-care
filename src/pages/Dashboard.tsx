@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Clock, Calendar, Star, CreditCard, MessageCircle, Check, PhoneCall } from 'lucide-react';
@@ -145,32 +144,37 @@ const Dashboard = () => {
     });
   };
 
-  // Updated services with BDT currency format
+  // Updated services with new pricing
   const services = [
     {
-      name: "Hourly Babysitting",
+      name: "Daytime Care",
       timeSlot: "7 AM – 6 PM",
       price: "249"
     },
     {
-      name: "Hourly Babysitting (Night)",
+      name: "Evening Care 🌙",
       timeSlot: "6 PM – 10 PM",
-      price: "299"
+      price: "329"
     },
     {
       name: "Full-Day Childcare",
       timeSlot: "8 AM – 6 PM",
-      price: "1,499"
+      price: "999"
     },
     {
       name: "Overnight Care",
       timeSlot: "10 PM – 6 AM",
-      price: "1,999"
+      price: "1,299"
     },
     {
-      name: "Elderly Care (Daily)",
+      name: "Elderly Care 🍲",
       timeSlot: "8 AM – 8 PM",
-      price: "1,799"
+      price: "1,199"
+    },
+    {
+      name: "Weekend Package",
+      timeSlot: "Fri + Sat (Hourly)",
+      price: "395"
     }
   ];
 

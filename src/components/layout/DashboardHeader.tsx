@@ -2,6 +2,7 @@
 import { useLocation } from "react-router-dom";
 import { Bell, PhoneCall } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useRoleCheck } from "@/hooks/useRoleCheck";
 
 interface DashboardHeaderProps {
   toggleSidebar?: () => void;
@@ -9,6 +10,17 @@ interface DashboardHeaderProps {
 
 export const DashboardHeader = ({ toggleSidebar }: DashboardHeaderProps) => {
   const location = useLocation();
+  const { isClient, isEmployee, user } = useRoleCheck();
+  
+  // Get username from metadata if available
+  const userName = user?.user_metadata?.name || 'User';
+  
+  // Get portal type based on user role
+  const getPortalType = () => {
+    if (isClient) return "Family Account";
+    if (isEmployee) return "Staff Portal";
+    return "";
+  };
 
   // Get page title based on current route
   const getPageTitle = () => {
@@ -44,7 +56,12 @@ export const DashboardHeader = ({ toggleSidebar }: DashboardHeaderProps) => {
         <h1 className="text-xl font-montserrat font-bold text-gray-800">
           {getPageTitle()}
         </h1>
-        <p className="text-sm text-gray-500 hidden sm:block">
+        <div className="flex items-center gap-1">
+          <p className="text-sm text-gray-500 hidden sm:block">
+            {userName} | <span className="text-tedora-sage font-medium">{getPortalType()}</span>
+          </p>
+        </div>
+        <p className="text-xs text-gray-400 hidden sm:block mt-0.5">
           TEDora+ | Trust Everyday Care
         </p>
       </div>

@@ -18,15 +18,15 @@ const ServicesSection = () => {
   
   const services = [
     {
-      name: "Hourly Babysitting",
+      name: "Daytime Care",
       timeSlot: "7 AM – 6 PM",
       price: "249/hour",
       minTime: "(Min: 3hr)"
     }, 
     {
-      name: "Hourly Babysitting (Night)",
+      name: "Evening Care 🌙",
       timeSlot: "6 PM – 10 PM",
-      price: "299/hour",
+      price: "329/hour",
       minTime: "(Min: 2hr)"
     },
     {
@@ -38,11 +38,11 @@ const ServicesSection = () => {
     {
       name: "Overnight Care",
       timeSlot: "10 PM – 6 AM",
-      price: "1,499/night",
+      price: "1,299/night",
       minTime: ""
     },
     {
-      name: "Elderly Care (Daily)",
+      name: "Elderly Care 🍲",
       timeSlot: "8 AM – 8 PM",
       price: "1,199/day",
       minTime: ""
@@ -50,8 +50,8 @@ const ServicesSection = () => {
     {
       name: "Weekend Package",
       timeSlot: "Fri + Sat (Hourly)",
-      price: "399/hour",
-      minTime: ""
+      price: "395/hour",
+      minTime: "(Min: 2hr)"
     }
   ];
 

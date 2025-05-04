@@ -28,6 +28,7 @@ export const useRoleCheck = (): RoleCheckResult => {
         return;
       }
 
+      // Store full user object for access to metadata
       setUser(session.user);
       const userData = session.user.user_metadata;
       
@@ -46,9 +47,23 @@ export const useRoleCheck = (): RoleCheckResult => {
         if (employee) {
           setIsEmployee(true);
           setIsClient(false);
+          
+          // If user is an employee but doesn't have the role set, update it
+          if (!userData?.role || userData.role !== "employee") {
+            await supabase.auth.updateUser({
+              data: { role: 'employee' }
+            });
+          }
         } else {
           setIsEmployee(false);
-          setIsClient(false);
+          setIsClient(true);
+          
+          // If user has no role, default to client
+          if (!userData?.role) {
+            await supabase.auth.updateUser({
+              data: { role: 'client' }
+            });
+          }
         }
       }
     } catch (error) {

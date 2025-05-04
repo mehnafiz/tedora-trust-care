@@ -17,6 +17,17 @@ interface ServicesCardProps {
 }
 
 export const ServicesCard = ({ services, onBookService }: ServicesCardProps) => {
+  // Helper function to add emoji if not present in name
+  const getServiceDisplayName = (name: string) => {
+    if (name.includes("Evening Care") && !name.includes("🌙")) {
+      return "Evening Care 🌙";
+    }
+    if (name.includes("Elderly Care") && !name.includes("🍲")) {
+      return "Elderly Care 🍲";
+    }
+    return name;
+  };
+  
   return (
     <Card className="bg-white/90 backdrop-blur-sm border border-[#6BA8A9]/20 shadow-lg mt-6 overflow-hidden rounded-xl">
       <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-6">
@@ -33,7 +44,9 @@ export const ServicesCard = ({ services, onBookService }: ServicesCardProps) => 
               Popular
             </div>
             <div className="p-5">
-              <h3 className="font-semibold text-lg text-tedora-sage mb-2">{service.name}</h3>
+              <h3 className="font-semibold text-lg text-tedora-sage mb-2">
+                {getServiceDisplayName(service.name)}
+              </h3>
               
               <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
                 <Clock className="h-4 w-4 text-tedora-sage/70" />
@@ -46,6 +59,15 @@ export const ServicesCard = ({ services, onBookService }: ServicesCardProps) => 
                 <div className="text-xl font-bold text-tedora-peach">
                   ৳ {service.price}
                 </div>
+                {service.name.includes("Daytime Care") && 
+                  <span className="ml-2 text-xs text-gray-500">(Min: 3hr)</span>
+                }
+                {service.name.includes("Evening Care") && 
+                  <span className="ml-2 text-xs text-gray-500">(Min: 2hr)</span>
+                }
+                {service.name.includes("Weekend Package") && 
+                  <span className="ml-2 text-xs text-gray-500">(Min: 2hr)</span>
+                }
               </div>
               
               <div className="mt-4 pt-4 border-t border-slate-100">
