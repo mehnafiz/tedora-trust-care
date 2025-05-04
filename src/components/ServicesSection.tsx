@@ -1,3 +1,4 @@
+
 import { AlertTriangle, Calendar, PhoneCall, Stethoscope } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { motion } from "framer-motion";
@@ -154,21 +155,6 @@ const ServicesSection = () => {
               </Table>
             </div>
           </div>
-          
-          {/* Doctor image at bottom right */}
-          <motion.div 
-            className="absolute -bottom-6 -right-4 sm:-bottom-4 sm:-right-2 lg:-bottom-2 lg:right-4 z-10"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8, duration: 0.8 }}
-          >
-            <img 
-              src="/lovable-uploads/b56ff574-88e9-4d7d-abe0-9229542a65bc.png" 
-              alt="Cartoon Doctor" 
-              className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 object-contain"
-              style={{ filter: "drop-shadow(0px 3px 6px rgba(0,0,0,0.2))" }}
-            />
-          </motion.div>
           
           {/* Promo Disclaimer */}
           <motion.div 
