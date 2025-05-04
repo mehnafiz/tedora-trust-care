@@ -22,8 +22,8 @@ export const ServicesCard = ({ services, onBookService }: ServicesCardProps) => 
     if (name.includes("Evening Care") && !name.includes("🌙")) {
       return "Evening Care 🌙";
     }
-    if (name.includes("Elderly Care") && !name.includes("🍲")) {
-      return "Elderly Care 🍲";
+    if (name.includes("Elderly Care") && !name.includes("")) {
+      return "Elderly Care ";
     }
     return name;
   };
