@@ -154,7 +154,7 @@ const Dashboard = () => {
     {
       name: "Evening Care 🌙",
       timeSlot: "6 PM – 10 PM",
-      price: "329"
+      price: "349"
     },
     {
       name: "Full-Day Childcare",
@@ -167,14 +167,14 @@ const Dashboard = () => {
       price: "1,299"
     },
     {
-      name: "Elderly Care 🍲",
+      name: "Elderly Care",
       timeSlot: "8 AM – 8 PM",
       price: "1,199"
     },
     {
       name: "Weekend Package",
       timeSlot: "Fri + Sat (Hourly)",
-      price: "395"
+      price: "399"
     }
   ];
 
