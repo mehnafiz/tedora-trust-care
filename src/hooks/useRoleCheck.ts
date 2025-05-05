@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -18,7 +18,8 @@ export const useRoleCheck = (): RoleCheckResult => {
   const [user, setUser] = useState<any>(null);
   const { toast } = useToast();
 
-  const checkUserRole = async () => {
+  // Use useCallback to memoize the function to prevent unnecessary re-renders
+  const checkUserRole = useCallback(async () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
       
@@ -34,17 +35,19 @@ export const useRoleCheck = (): RoleCheckResult => {
       setUser(session.user);
       const userData = session.user.user_metadata;
       
-      // Check if user is a client based on metadata
+      // Optimize role checking by using cached role data when available
       if (userData && userData.role === "client") {
         setIsClient(true);
         setIsEmployee(false);
-      } else {
-        // Check if user is an employee with verification
+        setIsLoading(false);
+        return;
+      } else if (userData && userData.role === "employee") {
+        // Double-check employee status in database
         const { data: employee, error } = await supabase
           .from('employees')
-          .select('*')
+          .select('is_validated')
           .eq('user_id', session.user.id)
-          .eq('is_validated', true) // Important: Only consider validated employees
+          .eq('is_validated', true)
           .maybeSingle();
         
         if (error) {
@@ -59,23 +62,55 @@ export const useRoleCheck = (): RoleCheckResult => {
         if (employee) {
           setIsEmployee(true);
           setIsClient(false);
-          
-          // If user is an employee but doesn't have the role set, update it
-          if (!userData?.role || userData.role !== "employee") {
-            await supabase.auth.updateUser({
-              data: { role: 'employee' }
-            });
-          }
         } else {
+          // If user has employee role but no valid record, reset to client
           setIsEmployee(false);
           setIsClient(true);
-          
-          // If user has no role, default to client
-          if (!userData?.role) {
-            await supabase.auth.updateUser({
-              data: { role: 'client' }
-            });
-          }
+          await supabase.auth.updateUser({
+            data: { role: 'client' }
+          });
+        }
+        
+        setIsLoading(false);
+        return;
+      }
+
+      // If no role is set or needs verification
+      const { data: employee, error } = await supabase
+        .from('employees')
+        .select('*')
+        .eq('user_id', session.user.id)
+        .eq('is_validated', true)
+        .maybeSingle();
+      
+      if (error) {
+        console.error("Error checking employee status:", error);
+        toast({
+          title: "Authentication Error",
+          description: "There was a problem verifying your account status.",
+          variant: "destructive",
+        });
+      }
+      
+      if (employee) {
+        setIsEmployee(true);
+        setIsClient(false);
+        
+        // If user is an employee but doesn't have the role set, update it
+        if (!userData?.role || userData.role !== "employee") {
+          await supabase.auth.updateUser({
+            data: { role: 'employee' }
+          });
+        }
+      } else {
+        setIsEmployee(false);
+        setIsClient(true);
+        
+        // If user has no role, default to client
+        if (!userData?.role) {
+          await supabase.auth.updateUser({
+            data: { role: 'client' }
+          });
         }
       }
     } catch (error) {
@@ -90,18 +125,18 @@ export const useRoleCheck = (): RoleCheckResult => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [toast]);
 
   useEffect(() => {
-    // First set up auth state change listener
+    // First set up auth state change listener with optimizations
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         if (session) {
           setUser(session.user);
-          // Use setTimeout to avoid potential auth deadlocks
-          setTimeout(() => {
+          // Use requestAnimationFrame for smoother transitions
+          requestAnimationFrame(() => {
             checkUserRole();
-          }, 0);
+          });
         } else {
           setUser(null);
           setIsClient(false);
@@ -118,7 +153,7 @@ export const useRoleCheck = (): RoleCheckResult => {
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [checkUserRole]);
 
   const refreshUser = async () => {
     setIsLoading(true);

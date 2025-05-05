@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Clock, Calendar, PhoneCall } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Separator } from '@/components/ui/separator';
+import { useMemo } from 'react';
 
 interface Service {
   name: string;
@@ -17,16 +18,18 @@ interface ServicesCardProps {
 }
 
 export const ServicesCard = ({ services, onBookService }: ServicesCardProps) => {
-  // Helper function to add emoji if not present in name
-  const getServiceDisplayName = (name: string) => {
-    if (name.includes("Evening Care") && !name.includes("🌙")) {
-      return "Evening Care 🌙";
-    }
-    if (name.includes("Elderly Care")) {
-      return "Elderly Care";
-    }
-    return name;
-  };
+  // Memoize service display names to prevent recalculation on every render
+  const getServiceDisplayName = useMemo(() => {
+    return (name: string) => {
+      if (name.includes("Evening Care") && !name.includes("🌙")) {
+        return "Evening Care 🌙";
+      }
+      if (name.includes("Elderly Care")) {
+        return "Elderly Care";
+      }
+      return name;
+    };
+  }, []);
   
   return (
     <Card className="bg-white/90 backdrop-blur-sm border border-[#6BA8A9]/20 shadow-lg mt-6 overflow-hidden rounded-xl">
