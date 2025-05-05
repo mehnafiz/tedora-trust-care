@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface RoleCheckResult {
   isClient: boolean;
@@ -15,6 +16,7 @@ export const useRoleCheck = (): RoleCheckResult => {
   const [isEmployee, setIsEmployee] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
+  const { toast } = useToast();
 
   const checkUserRole = async () => {
     try {
@@ -37,12 +39,22 @@ export const useRoleCheck = (): RoleCheckResult => {
         setIsClient(true);
         setIsEmployee(false);
       } else {
-        // Check if user is an employee
-        const { data: employee } = await supabase
+        // Check if user is an employee with verification
+        const { data: employee, error } = await supabase
           .from('employees')
           .select('*')
           .eq('user_id', session.user.id)
+          .eq('is_validated', true) // Important: Only consider validated employees
           .maybeSingle();
+        
+        if (error) {
+          console.error("Error checking employee status:", error);
+          toast({
+            title: "Authentication Error",
+            description: "There was a problem verifying your account status.",
+            variant: "destructive",
+          });
+        }
         
         if (employee) {
           setIsEmployee(true);
@@ -68,6 +80,11 @@ export const useRoleCheck = (): RoleCheckResult => {
       }
     } catch (error) {
       console.error("Error checking user role:", error);
+      toast({
+        title: "Authentication Error",
+        description: "There was a problem verifying your account. Please try logging in again.",
+        variant: "destructive",
+      });
       setIsClient(false);
       setIsEmployee(false);
     } finally {
@@ -76,13 +93,12 @@ export const useRoleCheck = (): RoleCheckResult => {
   };
 
   useEffect(() => {
-    checkUserRole();
-    
-    // Listen for auth state changes
+    // First set up auth state change listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         if (session) {
           setUser(session.user);
+          // Use setTimeout to avoid potential auth deadlocks
           setTimeout(() => {
             checkUserRole();
           }, 0);
@@ -94,6 +110,9 @@ export const useRoleCheck = (): RoleCheckResult => {
         }
       }
     );
+    
+    // Then check initial session
+    checkUserRole();
     
     // Cleanup subscription
     return () => {
