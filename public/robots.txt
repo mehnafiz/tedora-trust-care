@@ -2,4 +2,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://tedoraplus.care/sitemap.xml
+Sitemap: https://tedoracare.com/sitemap.xml
