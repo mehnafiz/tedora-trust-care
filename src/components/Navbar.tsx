@@ -20,7 +20,7 @@ const Navbar = () => {
   
   return (
     <nav className={`sticky top-0 z-50 transition-all duration-300 ${
-      isScrolled ? "bg-white/90 backdrop-blur-md shadow-md" : "bg-white"
+      isScrolled ? "bg-white/95 backdrop-blur-md shadow-lg" : "bg-white"
     }`}>
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         {/* Logo and Text */}
@@ -29,12 +29,15 @@ const Navbar = () => {
             <motion.div 
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
+              className="relative overflow-hidden rounded-full bg-gradient-to-r from-tedora-teal to-tedora-tealLight p-0.5 shadow-md"
             >
-              <img 
-                src="/lovable-uploads/73132813-1a1f-4e1d-9875-5f1998948f10.png" 
-                alt="TEDora+ Logo" 
-                className="h-16 md:h-20 w-auto object-contain drop-shadow-md"
-              />
+              <div className="bg-white rounded-full p-1">
+                <img 
+                  src="/lovable-uploads/73132813-1a1f-4e1d-9875-5f1998948f10.png" 
+                  alt="TEDora+ Logo" 
+                  className="h-16 w-16 md:h-16 md:w-16 object-contain"
+                />
+              </div>
             </motion.div>
             <div className="flex flex-col">
               <span className="text-2xl font-bold text-tedora-teal font-playfair">TEDora+</span>
@@ -56,7 +59,7 @@ const Navbar = () => {
               transition={{ duration: 0.3, delay: index * 0.1 }}
             >
               {item.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-tedora-teal group-hover:w-full transition-all duration-300"></span>
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-tedora-teal to-tedora-gold group-hover:w-full transition-all duration-300"></span>
             </motion.a>
           ))}
           
@@ -68,7 +71,7 @@ const Navbar = () => {
             <Link to="/login" className="text-gray-700 hover:text-tedora-teal transition-colors flex items-center gap-1 relative group">
               <LogIn size={16} />
               <span>Login</span>
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-tedora-teal group-hover:w-full transition-all duration-300"></span>
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-tedora-teal to-tedora-gold group-hover:w-full transition-all duration-300"></span>
             </Link>
           </motion.div>
           
@@ -77,7 +80,7 @@ const Navbar = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3, delay: 0.5 }}
           >
-            <Button className="bg-tedora-teal hover:bg-tedora-tealLight text-white rounded-full">
+            <Button className="bg-gradient-to-r from-tedora-teal to-tedora-tealLight hover:from-tedora-tealLight hover:to-tedora-teal text-white rounded-full shadow-md hover:shadow-lg transition-all duration-300">
               <Phone size={16} className="mr-2" /> +8801772322383
             </Button>
           </motion.div>
@@ -88,7 +91,7 @@ const Navbar = () => {
           <motion.button 
             whileTap={{ scale: 0.95 }}
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="p-2 text-gray-700 hover:text-tedora-teal"
+            className="p-2 text-tedora-teal hover:bg-tedora-teal/10 rounded-full"
           >
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </motion.button>
@@ -99,7 +102,7 @@ const Navbar = () => {
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div 
-            className="md:hidden bg-white/95 backdrop-blur-md border-t"
+            className="md:hidden bg-white/98 backdrop-blur-md border-t border-tedora-teal/10 shadow-lg"
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
@@ -139,7 +142,7 @@ const Navbar = () => {
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ delay: 0.5 }}
               >
-                <Button className="w-full bg-tedora-teal hover:bg-tedora-tealLight text-white rounded-full mt-2">
+                <Button className="w-full bg-gradient-to-r from-tedora-teal to-tedora-tealLight hover:from-tedora-tealLight hover:to-tedora-teal text-white rounded-full mt-2 shadow-md">
                   <Phone size={16} className="mr-2" /> Call Now
                 </Button>
               </motion.div>

@@ -51,9 +51,9 @@ export const DashboardHeader = ({ toggleSidebar }: DashboardHeaderProps) => {
   };
 
   return (
-    <div className="mb-6 bg-white rounded-lg shadow-sm p-3 flex justify-between items-center">
+    <div className="mb-6 bg-white rounded-lg shadow-md p-3 flex justify-between items-center border border-tedora-teal/10">
       <div>
-        <h1 className="text-xl font-montserrat font-bold text-tedora-teal">
+        <h1 className="text-xl font-montserrat font-bold text-gradient-to-r from-tedora-teal to-tedora-tealDark bg-clip-text text-transparent">
           {getPageTitle()}
         </h1>
         <div className="flex items-center gap-1">
@@ -69,13 +69,17 @@ export const DashboardHeader = ({ toggleSidebar }: DashboardHeaderProps) => {
         <Button 
           variant="outline" 
           size="sm" 
-          className="rounded-full border-tedora-teal/30"
+          className="rounded-full border-tedora-teal/30 hover:bg-tedora-teal/10 hover:border-tedora-teal/50 transition-all"
           onClick={() => window.location.href = "tel:+8801772322383"}
         >
           <PhoneCall className="h-4 w-4 text-tedora-teal" />
         </Button>
-        <Button variant="outline" size="sm" className="rounded-full border-tedora-teal/30">
-          <Bell className="h-4 w-4" />
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="rounded-full border-tedora-teal/30 hover:bg-tedora-teal/10 hover:border-tedora-teal/50 transition-all"
+        >
+          <Bell className="h-4 w-4 text-tedora-teal" />
         </Button>
       </div>
     </div>

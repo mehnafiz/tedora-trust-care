@@ -4,7 +4,7 @@ import { useMonthlyPackages } from "@/hooks/useMonthlyPackages";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Clock, Calendar, CheckCircle2, XCircle, Phone, Shield, Award } from "lucide-react";
+import { Clock, Calendar, CheckCircle2, XCircle, Phone, Shield, Award, Star } from "lucide-react";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 
@@ -58,7 +58,14 @@ const MonthlyPackages = () => {
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 font-montserrat text-tedora-tealDark">Monthly Care Packages</h2>
+          <div className="inline-block mb-2">
+            <Badge className="bg-tedora-teal/10 text-tedora-teal hover:bg-tedora-teal/20 mb-2">
+              Monthly Plans
+            </Badge>
+          </div>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 font-playfair bg-gradient-to-r from-tedora-teal to-tedora-gold bg-clip-text text-transparent">
+            Premium Care Packages
+          </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
             Choose from our range of affordable monthly care packages designed for both childcare and elderly care needs.
           </p>
@@ -70,16 +77,16 @@ const MonthlyPackages = () => {
             className="mt-8"
           >
             <div className="flex justify-center mb-8">
-              <TabsList className="grid w-[400px] grid-cols-2 bg-gray-100">
+              <TabsList className="grid w-[400px] grid-cols-2 bg-gray-100 p-1 rounded-lg">
                 <TabsTrigger 
                   value="child"
-                  className="data-[state=active]:bg-tedora-teal data-[state=active]:text-white"
+                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-tedora-teal data-[state=active]:to-tedora-tealLight data-[state=active]:text-white rounded-md"
                 >
                   Child Care
                 </TabsTrigger>
                 <TabsTrigger 
                   value="elderly"
-                  className="data-[state=active]:bg-tedora-teal data-[state=active]:text-white"
+                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-tedora-teal data-[state=active]:to-tedora-tealLight data-[state=active]:text-white rounded-md"
                 >
                   Elderly Care
                 </TabsTrigger>
@@ -149,26 +156,32 @@ const PackageCard = ({ pkg, index }: PackageCardProps) => {
       case 'premium':
         return {
           border: 'border-tedora-gold border-2',
-          header: 'bg-gradient-to-r from-tedora-teal to-tedora-tealLight text-white',
+          header: 'bg-gradient-to-r from-tedora-gold to-tedora-gold/90 text-white',
           badge: 'bg-tedora-gold text-white',
           icon: <Award className="h-5 w-5 text-tedora-gold" />,
           button: 'bg-tedora-gold hover:bg-tedora-gold/90 text-white',
+          shadow: 'shadow-xl shadow-tedora-gold/10',
+          bg: 'bg-gradient-to-br from-white via-white to-tedora-gold/5',
         };
       case 'standard':
         return {
           border: 'border-tedora-teal',
-          header: 'bg-gradient-to-r from-tedora-tealLight to-tedora-teal/80 text-white',
+          header: 'bg-gradient-to-r from-tedora-teal to-tedora-tealLight text-white',
           badge: 'bg-tedora-tealLight text-white',
           icon: <Shield className="h-5 w-5 text-tedora-tealLight" />,
           button: 'bg-tedora-teal hover:bg-tedora-teal/90 text-white',
+          shadow: 'shadow-lg shadow-tedora-teal/10',
+          bg: 'bg-white',
         };
       default: // basic
         return {
           border: 'border-gray-200',
           header: 'bg-gray-50 text-tedora-charcoal',
           badge: 'bg-gray-200 text-gray-700',
-          icon: null,
+          icon: <Star className="h-5 w-5 text-gray-400" />,
           button: 'bg-gray-700 hover:bg-gray-800 text-white',
+          shadow: 'shadow-md',
+          bg: 'bg-white',
         };
     }
   };
@@ -182,8 +195,9 @@ const PackageCard = ({ pkg, index }: PackageCardProps) => {
       transition={{ duration: 0.5, delay: index * 0.1 }}
       viewport={{ once: true }}
       whileHover={{ y: -5, transition: { duration: 0.2 } }}
+      className={style.shadow}
     >
-      <Card className={`overflow-hidden shadow-lg ${style.border}`}>
+      <Card className={`overflow-hidden ${style.border} ${pkg.tier === 'premium' ? 'ring-2 ring-tedora-gold/20' : ''}`}>
         <CardHeader className={`pb-4 ${style.header}`}>
           <div className="flex justify-between items-start">
             <div>
@@ -191,12 +205,12 @@ const PackageCard = ({ pkg, index }: PackageCardProps) => {
                 {style.icon}
                 {pkg.tier} Package
               </CardTitle>
-              <CardDescription className={pkg.tier === 'basic' ? 'text-gray-600' : 'text-white/80'}>
+              <CardDescription className={pkg.tier === 'basic' ? 'text-gray-600' : 'text-white/90'}>
                 {pkg.care_type === 'child' ? 'Child Care' : 'Elderly Care'}
               </CardDescription>
             </div>
             {pkg.tier === 'premium' && (
-              <Badge className="bg-tedora-gold text-white hover:bg-tedora-gold/90">
+              <Badge className="bg-white text-tedora-gold hover:bg-white/90 border border-tedora-gold/20">
                 Premium
               </Badge>
             )}
@@ -209,7 +223,7 @@ const PackageCard = ({ pkg, index }: PackageCardProps) => {
           </div>
         </CardHeader>
         
-        <CardContent className="pt-6">
+        <CardContent className={`pt-6 ${style.bg}`}>
           <ul className="space-y-3">
             <li className="flex items-start">
               <Clock className="h-5 w-5 text-tedora-teal mr-2 mt-0.5" />
@@ -255,10 +269,10 @@ const PackageCard = ({ pkg, index }: PackageCardProps) => {
             </Button>
             <Button 
               variant="outline" 
-              className="w-full mt-2 border-gray-300 text-gray-700 hover:bg-gray-50"
+              className="w-full mt-2 border-gray-300 text-gray-700 hover:bg-gray-50 group"
               onClick={() => window.location.href = "tel:+8801772322383"}
             >
-              <Phone className="h-4 w-4 mr-2" />
+              <Phone className="h-4 w-4 mr-2 group-hover:text-tedora-teal transition-colors" />
               +8801772322383
             </Button>
           </div>

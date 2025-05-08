@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
-import { Users, Baby, UserRoundCog, HeartPulse, Search, Clock, Calendar, Shield } from "lucide-react";
+import { Users, Baby, UserRoundCog, HeartPulse, Search, Clock, Calendar, Shield, Check, X } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -533,8 +533,8 @@ const PackageCard = ({ pkg }: PackageCardProps) => {
   const style = getCardStyle(pkg.tier);
   
   return (
-    <div className={`rounded-lg overflow-hidden shadow-md ${style.border}`}>
-      <div className="p-4 bg-white">
+    <div className={`rounded-lg overflow-hidden shadow-md ${style.border} hover:translate-y-[-5px] transition-transform duration-300`}>
+      <div className={`p-4 ${pkg.tier === 'premium' ? 'bg-gradient-to-br from-white to-tedora-gold/5' : 'bg-white'}`}>
         <div className="flex justify-between items-start mb-4">
           <div>
             <h3 className="font-bold text-lg capitalize">{pkg.tier} Package</h3>
