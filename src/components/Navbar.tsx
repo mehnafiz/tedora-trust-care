@@ -31,13 +31,13 @@ const Navbar = () => {
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
             >
               <img 
-                src="/lovable-uploads/47c58735-b6ab-46e9-8705-6f0e66f3ed34.png" 
+                src="/lovable-uploads/73132813-1a1f-4e1d-9875-5f1998948f10.png" 
                 alt="TEDora+ Logo" 
-                className="h-16 md:h-20 w-auto object-contain drop-shadow-md rounded-full"
+                className="h-16 md:h-20 w-auto object-contain drop-shadow-md"
               />
             </motion.div>
             <div className="flex flex-col">
-              <span className="text-2xl font-bold gradient-text font-playfair">TEDora+</span>
+              <span className="text-2xl font-bold text-tedora-teal font-playfair">TEDora+</span>
               <span className="text-sm text-gray-600 -mt-1 italic">Trust Everyday Care</span>
             </div>
           </div>
@@ -49,14 +49,14 @@ const Navbar = () => {
             <motion.a 
               key={item}
               href={`#${item}`} 
-              className="text-gray-700 hover:text-[#6BA8A9] transition-colors relative group"
+              className="text-gray-700 hover:text-tedora-teal transition-colors relative group"
               whileHover={{ scale: 1.05 }}
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: index * 0.1 }}
             >
               {item.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-tedora-sage group-hover:w-full transition-all duration-300"></span>
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-tedora-teal group-hover:w-full transition-all duration-300"></span>
             </motion.a>
           ))}
           
@@ -65,10 +65,10 @@ const Navbar = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.4 }}
           >
-            <Link to="/login" className="text-gray-700 hover:text-[#6BA8A9] transition-colors flex items-center gap-1 relative group">
+            <Link to="/login" className="text-gray-700 hover:text-tedora-teal transition-colors flex items-center gap-1 relative group">
               <LogIn size={16} />
               <span>Login</span>
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-tedora-sage group-hover:w-full transition-all duration-300"></span>
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-tedora-teal group-hover:w-full transition-all duration-300"></span>
             </Link>
           </motion.div>
           
@@ -77,7 +77,7 @@ const Navbar = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3, delay: 0.5 }}
           >
-            <Button className="bg-[#6BA8A9] hover:bg-[#6BA8A9]/90 text-white rounded-full">
+            <Button className="bg-tedora-teal hover:bg-tedora-tealLight text-white rounded-full">
               <Phone size={16} className="mr-2" /> +8801772322383
             </Button>
           </motion.div>
@@ -88,7 +88,7 @@ const Navbar = () => {
           <motion.button 
             whileTap={{ scale: 0.95 }}
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="p-2 text-gray-700 hover:text-[#6BA8A9]"
+            className="p-2 text-gray-700 hover:text-tedora-teal"
           >
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </motion.button>
@@ -110,7 +110,7 @@ const Navbar = () => {
                 <motion.a 
                   key={item}
                   href={`#${item}`} 
-                  className="block text-gray-700 hover:text-[#6BA8A9] py-2 border-b border-gray-100"
+                  className="block text-gray-700 hover:text-tedora-teal py-2 border-b border-gray-100"
                   onClick={() => setIsMenuOpen(false)}
                   initial={{ x: -20, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
@@ -127,7 +127,7 @@ const Navbar = () => {
               >
                 <Link 
                   to="/login"
-                  className="block text-gray-700 hover:text-[#6BA8A9] flex items-center gap-2 py-2 border-b border-gray-100"
+                  className="block text-gray-700 hover:text-tedora-teal flex items-center gap-2 py-2 border-b border-gray-100"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <LogIn size={16} /> Login
@@ -139,7 +139,7 @@ const Navbar = () => {
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ delay: 0.5 }}
               >
-                <Button className="w-full bg-[#6BA8A9] hover:bg-[#6BA8A9]/90 text-white rounded-full mt-2">
+                <Button className="w-full bg-tedora-teal hover:bg-tedora-tealLight text-white rounded-full mt-2">
                   <Phone size={16} className="mr-2" /> Call Now
                 </Button>
               </motion.div>

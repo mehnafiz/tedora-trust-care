@@ -53,12 +53,12 @@ export const DashboardHeader = ({ toggleSidebar }: DashboardHeaderProps) => {
   return (
     <div className="mb-6 bg-white rounded-lg shadow-sm p-3 flex justify-between items-center">
       <div>
-        <h1 className="text-xl font-montserrat font-bold text-gray-800">
+        <h1 className="text-xl font-montserrat font-bold text-tedora-teal">
           {getPageTitle()}
         </h1>
         <div className="flex items-center gap-1">
           <p className="text-sm text-gray-500 hidden sm:block">
-            {userName} | <span className="text-tedora-sage font-medium">{getPortalType()}</span>
+            {userName} | <span className="text-tedora-teal font-medium">{getPortalType()}</span>
           </p>
         </div>
         <p className="text-xs text-gray-400 hidden sm:block mt-0.5">
@@ -69,12 +69,12 @@ export const DashboardHeader = ({ toggleSidebar }: DashboardHeaderProps) => {
         <Button 
           variant="outline" 
           size="sm" 
-          className="rounded-full"
+          className="rounded-full border-tedora-teal/30"
           onClick={() => window.location.href = "tel:+8801772322383"}
         >
-          <PhoneCall className="h-4 w-4 text-tedora-sage" />
+          <PhoneCall className="h-4 w-4 text-tedora-teal" />
         </Button>
-        <Button variant="outline" size="sm" className="rounded-full">
+        <Button variant="outline" size="sm" className="rounded-full border-tedora-teal/30">
           <Bell className="h-4 w-4" />
         </Button>
       </div>

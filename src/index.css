@@ -74,7 +74,7 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-tedora-sage hover:bg-tedora-sage/90 text-white font-semibold py-2 sm:py-3 px-4 sm:px-6 rounded-2xl transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 overflow-hidden relative;
+    @apply bg-tedora-teal hover:bg-tedora-tealLight text-white font-semibold py-2 sm:py-3 px-4 sm:px-6 rounded-2xl transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 overflow-hidden relative;
   }
   
   .btn-primary::after {
@@ -87,20 +87,24 @@
   }
   
   .btn-secondary {
-    @apply bg-tedora-peach hover:bg-tedora-peach/90 text-gray-800 font-semibold py-2 sm:py-3 px-4 sm:px-6 rounded-2xl transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 flex items-center gap-2;
+    @apply bg-tedora-gold hover:bg-tedora-gold/90 text-white font-semibold py-2 sm:py-3 px-4 sm:px-6 rounded-2xl transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 flex items-center gap-2;
+  }
+
+  .btn-outline {
+    @apply border-2 border-tedora-teal text-tedora-teal hover:bg-tedora-teal/10 font-semibold py-2 sm:py-3 px-4 sm:px-6 rounded-2xl transition-all duration-300;
   }
 
   .section-title {
-    @apply text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-6 sm:mb-10 font-playfair text-gray-800 relative pb-4;
+    @apply text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-6 sm:mb-10 font-playfair text-tedora-charcoal relative pb-4;
   }
   
   .section-title::after {
     content: '';
-    @apply absolute left-1/2 -translate-x-1/2 bottom-0 h-1 w-16 sm:w-24 bg-gradient-to-r from-tedora-sage to-tedora-peach rounded-full;
+    @apply absolute left-1/2 -translate-x-1/2 bottom-0 h-1 w-16 sm:w-24 bg-gradient-to-r from-tedora-teal to-tedora-gold rounded-full;
   }
 
   .trust-badge {
-    @apply px-2 sm:px-3 py-1 bg-white/80 backdrop-blur-sm rounded-full shadow-sm border border-tedora-sage/20 text-xs sm:text-sm flex items-center gap-1 sm:gap-2 whitespace-nowrap hover:bg-white/90 transition-colors;
+    @apply px-2 sm:px-3 py-1 bg-white/80 backdrop-blur-sm rounded-full shadow-sm border border-tedora-teal/20 text-xs sm:text-sm flex items-center gap-1 sm:gap-2 whitespace-nowrap hover:bg-white/90 transition-colors;
   }
   
   .animate-gentle-pulse {
@@ -125,12 +129,12 @@
   
   .animated-divider::before {
     content: '';
-    @apply absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-tedora-sage/50 to-transparent;
+    @apply absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-tedora-teal/50 to-transparent;
   }
   
   .animated-divider::after {
     content: '';
-    @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 sm:w-6 md:w-8 h-4 sm:h-6 md:h-8 bg-tedora-peach/20 rounded-full animate-pulse;
+    @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 sm:w-6 md:w-8 h-4 sm:h-6 md:h-8 bg-tedora-gold/20 rounded-full animate-pulse;
   }
 
   .sparkle {
@@ -139,10 +143,43 @@
     animation: sparkle-animation 2s ease-in-out infinite;
   }
   
+  .premium-card {
+    @apply relative bg-white border-2 border-tedora-gold rounded-xl shadow-lg overflow-hidden;
+    background: linear-gradient(145deg, #ffffff, #fafafa);
+  }
+  
+  .premium-card::before {
+    content: '';
+    @apply absolute top-0 right-0 w-20 h-20 bg-tedora-gold opacity-10 rounded-full -translate-y-10 translate-x-10;
+  }
+  
   /* Optimize images */
   img {
     @apply max-w-full h-auto;
     content-visibility: auto;
+  }
+
+  .gradient-border {
+    position: relative;
+    border-radius: 0.5rem;
+  }
+
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 0.5rem;
+    padding: 2px;
+    background: linear-gradient(to right, #11706D, #D4AF37);
+    -webkit-mask: 
+      linear-gradient(#fff 0 0) content-box, 
+      linear-gradient(#fff 0 0);
+    mask: 
+      linear-gradient(#fff 0 0) content-box, 
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
   }
 }
 
@@ -156,7 +193,7 @@
   }
   
   .gradient-text {
-    @apply bg-gradient-to-r from-tedora-sage to-tedora-peach bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-tedora-teal to-tedora-gold bg-clip-text text-transparent;
   }
   
   .fadeIn {
@@ -168,6 +205,14 @@
     opacity: 0;
     transform: translateY(20px);
     animation: slideIn 0.6s ease-out forwards;
+  }
+
+  .premium-shadow {
+    box-shadow: 0 4px 20px rgba(17, 112, 109, 0.15);
+  }
+  
+  .gold-shadow {
+    box-shadow: 0 4px 20px rgba(212, 175, 55, 0.15);
   }
   
   /* Performance optimizations */

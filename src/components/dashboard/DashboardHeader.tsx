@@ -17,13 +17,13 @@ export const DashboardHeader = () => {
     <div className="flex justify-between items-center mb-8">
       <Link to="/" className="flex items-center gap-2">
         <img 
-          src="/lovable-uploads/47c58735-b6ab-46e9-8705-6f0e66f3ed34.png" 
+          src="/lovable-uploads/73132813-1a1f-4e1d-9875-5f1998948f10.png" 
           alt="TEDora+ Logo" 
           className="h-12 w-auto rounded-full"
         />
-        <span className="text-xl font-bold text-[#6BA8A9]">TEDora+</span>
+        <span className="text-xl font-bold text-tedora-teal">TEDora+</span>
       </Link>
-      <Button variant="ghost" onClick={handleLogout} className="flex items-center gap-2">
+      <Button variant="ghost" onClick={handleLogout} className="flex items-center gap-2 hover:bg-tedora-teal/10 hover:text-tedora-teal">
         <LogOut size={16} />
         <span>Log out</span>
       </Button>
