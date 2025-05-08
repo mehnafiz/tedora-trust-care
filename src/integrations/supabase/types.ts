@@ -78,6 +78,54 @@ export type Database = {
         }
         Relationships: []
       }
+      monthly_packages: {
+        Row: {
+          care_type: string
+          created_at: string
+          hours_end: string
+          hours_start: string
+          id: string
+          includes_exercise: boolean
+          includes_medication: boolean
+          is_24_hour: boolean
+          name: string
+          price: number
+          tier: string
+          updated_at: string
+          weekend_days: number
+        }
+        Insert: {
+          care_type: string
+          created_at?: string
+          hours_end: string
+          hours_start: string
+          id?: string
+          includes_exercise?: boolean
+          includes_medication?: boolean
+          is_24_hour?: boolean
+          name: string
+          price: number
+          tier: string
+          updated_at?: string
+          weekend_days?: number
+        }
+        Update: {
+          care_type?: string
+          created_at?: string
+          hours_end?: string
+          hours_start?: string
+          id?: string
+          includes_exercise?: boolean
+          includes_medication?: boolean
+          is_24_hour?: boolean
+          name?: string
+          price?: number
+          tier?: string
+          updated_at?: string
+          weekend_days?: number
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           address: string | null
