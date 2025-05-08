@@ -51,14 +51,14 @@ export const DashboardHeader = ({ toggleSidebar }: DashboardHeaderProps) => {
   };
 
   return (
-    <div className="mb-6 bg-white rounded-lg shadow-md p-3 flex justify-between items-center border border-tedora-teal/10">
+    <div className="mb-6 bg-white rounded-lg shadow-sm p-3 flex justify-between items-center">
       <div>
-        <h1 className="text-xl font-montserrat font-bold text-gradient-to-r from-tedora-teal to-tedora-tealDark bg-clip-text text-transparent">
+        <h1 className="text-xl font-montserrat font-bold text-gray-800">
           {getPageTitle()}
         </h1>
         <div className="flex items-center gap-1">
           <p className="text-sm text-gray-500 hidden sm:block">
-            {userName} | <span className="text-tedora-teal font-medium">{getPortalType()}</span>
+            {userName} | <span className="text-tedora-sage font-medium">{getPortalType()}</span>
           </p>
         </div>
         <p className="text-xs text-gray-400 hidden sm:block mt-0.5">
@@ -69,17 +69,13 @@ export const DashboardHeader = ({ toggleSidebar }: DashboardHeaderProps) => {
         <Button 
           variant="outline" 
           size="sm" 
-          className="rounded-full border-tedora-teal/30 hover:bg-tedora-teal/10 hover:border-tedora-teal/50 transition-all"
+          className="rounded-full"
           onClick={() => window.location.href = "tel:+8801772322383"}
         >
-          <PhoneCall className="h-4 w-4 text-tedora-teal" />
+          <PhoneCall className="h-4 w-4 text-tedora-sage" />
         </Button>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="rounded-full border-tedora-teal/30 hover:bg-tedora-teal/10 hover:border-tedora-teal/50 transition-all"
-        >
-          <Bell className="h-4 w-4 text-tedora-teal" />
+        <Button variant="outline" size="sm" className="rounded-full">
+          <Bell className="h-4 w-4" />
         </Button>
       </div>
     </div>

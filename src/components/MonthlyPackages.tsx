@@ -4,7 +4,7 @@ import { useMonthlyPackages } from "@/hooks/useMonthlyPackages";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Clock, Calendar, CheckCircle2, XCircle, Phone, Shield, Award, Star } from "lucide-react";
+import { Clock, Calendar, CheckCircle2, XCircle, Phone } from "lucide-react";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 
@@ -58,14 +58,7 @@ const MonthlyPackages = () => {
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <div className="inline-block mb-2">
-            <Badge className="bg-tedora-teal/10 text-tedora-teal hover:bg-tedora-teal/20 mb-2">
-              Monthly Plans
-            </Badge>
-          </div>
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 font-playfair bg-gradient-to-r from-tedora-teal to-tedora-gold bg-clip-text text-transparent">
-            Premium Care Packages
-          </h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 font-montserrat">Monthly Care Packages</h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
             Choose from our range of affordable monthly care packages designed for both childcare and elderly care needs.
           </p>
@@ -77,19 +70,9 @@ const MonthlyPackages = () => {
             className="mt-8"
           >
             <div className="flex justify-center mb-8">
-              <TabsList className="grid w-[400px] grid-cols-2 bg-gray-100 p-1 rounded-lg">
-                <TabsTrigger 
-                  value="child"
-                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-tedora-teal data-[state=active]:to-tedora-tealLight data-[state=active]:text-white rounded-md"
-                >
-                  Child Care
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="elderly"
-                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-tedora-teal data-[state=active]:to-tedora-tealLight data-[state=active]:text-white rounded-md"
-                >
-                  Elderly Care
-                </TabsTrigger>
+              <TabsList className="grid w-[400px] grid-cols-2">
+                <TabsTrigger value="child">Child Care</TabsTrigger>
+                <TabsTrigger value="elderly">Elderly Care</TabsTrigger>
               </TabsList>
             </div>
             
@@ -116,7 +99,7 @@ const MonthlyPackages = () => {
       <div 
         className="absolute inset-0 bg-gradient-to-b from-transparent to-white/20 pointer-events-none z-0"
         style={{
-          backgroundImage: "radial-gradient(circle at 1px 1px, rgba(17, 112, 109, 0.05) 1px, transparent 0)",
+          backgroundImage: "radial-gradient(circle at 1px 1px, rgba(107, 168, 169, 0.05) 1px, transparent 0)",
           backgroundSize: "22px 22px"
         }}
       />
@@ -150,44 +133,6 @@ const PackageCard = ({ pkg, index }: PackageCardProps) => {
     }).format(price);
   };
   
-  // Define card styling based on tier
-  const getCardStyle = (tier: string) => {
-    switch(tier) {
-      case 'premium':
-        return {
-          border: 'border-tedora-gold border-2',
-          header: 'bg-gradient-to-r from-tedora-gold to-tedora-gold/90 text-white',
-          badge: 'bg-tedora-gold text-white',
-          icon: <Award className="h-5 w-5 text-tedora-gold" />,
-          button: 'bg-tedora-gold hover:bg-tedora-gold/90 text-white',
-          shadow: 'shadow-xl shadow-tedora-gold/10',
-          bg: 'bg-gradient-to-br from-white via-white to-tedora-gold/5',
-        };
-      case 'standard':
-        return {
-          border: 'border-tedora-teal',
-          header: 'bg-gradient-to-r from-tedora-teal to-tedora-tealLight text-white',
-          badge: 'bg-tedora-tealLight text-white',
-          icon: <Shield className="h-5 w-5 text-tedora-tealLight" />,
-          button: 'bg-tedora-teal hover:bg-tedora-teal/90 text-white',
-          shadow: 'shadow-lg shadow-tedora-teal/10',
-          bg: 'bg-white',
-        };
-      default: // basic
-        return {
-          border: 'border-gray-200',
-          header: 'bg-gray-50 text-tedora-charcoal',
-          badge: 'bg-gray-200 text-gray-700',
-          icon: <Star className="h-5 w-5 text-gray-400" />,
-          button: 'bg-gray-700 hover:bg-gray-800 text-white',
-          shadow: 'shadow-md',
-          bg: 'bg-white',
-        };
-    }
-  };
-  
-  const style = getCardStyle(pkg.tier);
-  
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -195,23 +140,35 @@ const PackageCard = ({ pkg, index }: PackageCardProps) => {
       transition={{ duration: 0.5, delay: index * 0.1 }}
       viewport={{ once: true }}
       whileHover={{ y: -5, transition: { duration: 0.2 } }}
-      className={style.shadow}
     >
-      <Card className={`overflow-hidden ${style.border} ${pkg.tier === 'premium' ? 'ring-2 ring-tedora-gold/20' : ''}`}>
-        <CardHeader className={`pb-4 ${style.header}`}>
+      <Card className={`overflow-hidden ${
+        pkg.tier === 'premium' 
+          ? 'border-tedora-peach shadow-lg' 
+          : pkg.tier === 'standard'
+            ? 'border-tedora-sage shadow-md'
+            : 'border-gray-200 shadow-sm'
+      }`}>
+        <CardHeader className={`pb-4 ${
+          pkg.tier === 'premium' 
+            ? 'bg-gradient-to-r from-tedora-peach to-orange-400 text-white' 
+            : pkg.tier === 'standard'
+              ? 'bg-gradient-to-r from-tedora-sage to-tedora-sage/70 text-white'
+              : 'bg-gray-50 text-gray-800'
+        }`}>
           <div className="flex justify-between items-start">
             <div>
-              <CardTitle className="text-xl font-bold capitalize flex items-center gap-2">
-                {style.icon}
+              <CardTitle className="text-xl font-bold capitalize">
                 {pkg.tier} Package
               </CardTitle>
-              <CardDescription className={pkg.tier === 'basic' ? 'text-gray-600' : 'text-white/90'}>
+              <CardDescription className={`mt-1 ${
+                pkg.tier === 'basic' ? 'text-gray-600' : 'text-white/80'
+              }`}>
                 {pkg.care_type === 'child' ? 'Child Care' : 'Elderly Care'}
               </CardDescription>
             </div>
             {pkg.tier === 'premium' && (
-              <Badge className="bg-white text-tedora-gold hover:bg-white/90 border border-tedora-gold/20">
-                Premium
+              <Badge className="bg-white text-tedora-peach hover:bg-white/90">
+                Popular
               </Badge>
             )}
           </div>
@@ -223,10 +180,10 @@ const PackageCard = ({ pkg, index }: PackageCardProps) => {
           </div>
         </CardHeader>
         
-        <CardContent className={`pt-6 ${style.bg}`}>
+        <CardContent className="pt-6">
           <ul className="space-y-3">
             <li className="flex items-start">
-              <Clock className="h-5 w-5 text-tedora-teal mr-2 mt-0.5" />
+              <Clock className="h-5 w-5 text-tedora-sage mr-2 mt-0.5" />
               <span>
                 {pkg.is_24_hour 
                   ? <span className="font-medium">24-hour service</span>
@@ -236,7 +193,7 @@ const PackageCard = ({ pkg, index }: PackageCardProps) => {
             </li>
             
             <li className="flex items-start">
-              <Calendar className="h-5 w-5 text-tedora-teal mr-2 mt-0.5" />
+              <Calendar className="h-5 w-5 text-tedora-sage mr-2 mt-0.5" />
               <span>{pkg.weekend_days} Weekend {pkg.weekend_days > 1 ? 'Days' : 'Day'} Included</span>
             </li>
             
@@ -263,16 +220,22 @@ const PackageCard = ({ pkg, index }: PackageCardProps) => {
           
           <div className="mt-6 pt-6 border-t border-gray-200">
             <Button 
-              className={`w-full ${style.button}`}
+              className={`w-full ${
+                pkg.tier === 'premium' 
+                  ? 'bg-tedora-peach hover:bg-tedora-peach/90' 
+                  : pkg.tier === 'standard'
+                    ? 'bg-tedora-sage hover:bg-tedora-sage/90'
+                    : 'bg-gray-700 hover:bg-gray-800'
+              }`}
             >
-              Book Now
+              Call to Book
             </Button>
             <Button 
               variant="outline" 
-              className="w-full mt-2 border-gray-300 text-gray-700 hover:bg-gray-50 group"
+              className="w-full mt-2 border-gray-300 text-gray-700 hover:bg-gray-50"
               onClick={() => window.location.href = "tel:+8801772322383"}
             >
-              <Phone className="h-4 w-4 mr-2 group-hover:text-tedora-teal transition-colors" />
+              <Phone className="h-4 w-4 mr-2" />
               +8801772322383
             </Button>
           </div>

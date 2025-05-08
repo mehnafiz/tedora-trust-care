@@ -24,9 +24,9 @@ const Hero = () => {
   return (
     <section className="relative pt-20 pb-24 overflow-hidden">
       {/* Background gradient and shapes */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#F2FCE2] via-white to-[#E5F7F7] -z-10"></div>
-      <div className="absolute top-1/4 left-20 w-96 h-96 bg-tedora-teal/5 rounded-full blur-[120px] -z-10"></div>
-      <div className="absolute bottom-0 right-0 w-72 h-72 bg-tedora-gold/5 rounded-full blur-[100px] -z-10"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-[#FFF9F0] via-white to-[#F2FCE2] -z-10"></div>
+      <div className="absolute top-1/4 left-20 w-96 h-96 bg-tedora-sage/5 rounded-full blur-[120px] -z-10"></div>
+      <div className="absolute bottom-0 right-0 w-72 h-72 bg-tedora-peach/5 rounded-full blur-[100px] -z-10"></div>
       
       <div className="container mx-auto px-4">
         <motion.div 
@@ -55,12 +55,12 @@ const Hero = () => {
                   animate={{ rotate: [0, -2, 0, 2, 0] }}
                   transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                 >
-                  <Sparkles size={32} className="text-tedora-gold" />
+                  <Sparkles size={32} className="text-yellow-400" />
                 </motion.div>
               </span>
               <span className="relative block mt-2">
                 Our Priority
-                <div className="absolute -bottom-2 left-0 w-full h-2 bg-tedora-teal/20 -rotate-1"></div>
+                <div className="absolute -bottom-2 left-0 w-full h-2 bg-tedora-sage/20 -rotate-1"></div>
               </span>
               <span className="block mt-4 gradient-text">
                 Affordable Care in Dhaka!
@@ -82,14 +82,14 @@ const Hero = () => {
                 whileHover={{ scale: 1.05 }}
                 className="trust-badge backdrop-blur-sm"
               >
-                <Check size={16} className="text-tedora-teal" />
+                <Check size={16} className="text-tedora-sage" />
                 <span>100% Background-Checked</span>
               </motion.div>
               <motion.div 
                 whileHover={{ scale: 1.05 }}
                 className="trust-badge backdrop-blur-sm"
               >
-                <Check size={16} className="text-tedora-teal" />
+                <Check size={16} className="text-tedora-sage" />
                 <span>First-Aid Certified</span>
               </motion.div>
             </motion.div>
@@ -112,7 +112,7 @@ const Hero = () => {
                   />
                 </span>
                 <motion.span 
-                  className="absolute inset-0 bg-gradient-to-r from-tedora-teal to-tedora-tealLight rounded-2xl -z-10"
+                  className="absolute inset-0 bg-gradient-to-r from-tedora-sage to-tedora-sage/80 rounded-2xl -z-10"
                   animate={{ scale: [1, 1.03, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 />
@@ -144,17 +144,18 @@ const Hero = () => {
             >
               <div className="absolute inset-0 grid grid-cols-2">
                 <motion.div 
-                  className="bg-gradient-to-br from-tedora-teal/20 via-tedora-teal/30 to-transparent p-6 flex items-center justify-center backdrop-blur-sm transition-all duration-300 hover:backdrop-blur-md"
+                  className="bg-gradient-to-br from-tedora-sage/20 via-tedora-sage/30 to-transparent p-6 flex items-center justify-center backdrop-blur-sm transition-all duration-300 hover:backdrop-blur-md"
                   whileHover={{ scale: 1.02 }}
                 >
                   <div className="glass-card p-6 w-full max-w-[200px] text-center">
                     <div className="flex justify-center mb-4">
                       <motion.div 
-                        className="w-16 h-16 bg-tedora-teal/20 rounded-full flex items-center justify-center"
+                        className="w-16 h-16 bg-tedora-sage/20 rounded-full flex items-center justify-center"
                         animate={{ scale: [1, 1.1, 1] }}
                         transition={{ duration: 3, repeat: Infinity }}
                       >
-                        <Sparkles className="h-8 w-8 text-tedora-teal" />
+                        {/* Removed image and replaced with icon */}
+                        <Sparkles className="h-8 w-8 text-tedora-sage" />
                       </motion.div>
                     </div>
                     <div className="text-2xl font-playfair font-bold text-gray-800 mb-2">Childcare</div>
@@ -162,17 +163,18 @@ const Hero = () => {
                   </div>
                 </motion.div>
                 <motion.div 
-                  className="bg-gradient-to-bl from-tedora-gold/20 via-tedora-gold/30 to-transparent p-6 flex items-center justify-center backdrop-blur-sm transition-all duration-300 hover:backdrop-blur-md"
+                  className="bg-gradient-to-bl from-tedora-peach/20 via-tedora-peach/30 to-transparent p-6 flex items-center justify-center backdrop-blur-sm transition-all duration-300 hover:backdrop-blur-md"
                   whileHover={{ scale: 1.02 }}
                 >
                   <div className="glass-card p-6 w-full max-w-[200px] text-center">
                     <div className="flex justify-center mb-4">
                       <motion.div 
-                        className="w-16 h-16 bg-tedora-gold/20 rounded-full flex items-center justify-center"
+                        className="w-16 h-16 bg-tedora-peach/20 rounded-full flex items-center justify-center"
                         animate={{ scale: [1, 1.1, 1] }}
                         transition={{ duration: 3.5, repeat: Infinity, delay: 0.5 }}
                       >
-                        <Check className="h-8 w-8 text-tedora-gold" />
+                        {/* Removed image and replaced with icon */}
+                        <Check className="h-8 w-8 text-tedora-peach" />
                       </motion.div>
                     </div>
                     <div className="text-2xl font-playfair font-bold text-gray-800 mb-2">Elderly Care</div>
@@ -183,8 +185,8 @@ const Hero = () => {
             </motion.div>
 
             {/* Decorative elements */}
-            <div className="absolute -bottom-6 -right-6 w-24 h-24 bg-tedora-teal/10 rounded-full"></div>
-            <div className="absolute -top-6 -left-6 w-20 h-20 bg-tedora-gold/10 rounded-full"></div>
+            <div className="absolute -bottom-6 -right-6 w-24 h-24 bg-tedora-sage/10 rounded-full"></div>
+            <div className="absolute -top-6 -left-6 w-20 h-20 bg-tedora-peach/10 rounded-full"></div>
           </motion.div>
         </motion.div>
       </div>

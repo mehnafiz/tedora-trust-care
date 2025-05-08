@@ -29,21 +29,18 @@ export default {
 				ring: 'hsl(var(--ring))',
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
-				// TEDora+ brand colors updated to match new logo
+				// TEDora+ brand colors
 				tedora: {
-					teal: '#11706D',       // Main teal from logo
-					tealLight: '#1A9A96',  // Lighter version for hover states
-					tealDark: '#0D5956',   // Darker version for active/pressed states
-					cream: '#FFF9F0',      // Kept from previous palette
-					gold: '#D4AF37',       // New premium accent color
-					charcoal: '#333333'    // Dark text color
+					sage: '#8CA07D',
+					peach: '#FFB88C',
+					cream: '#FFF9F0'
 				},
 				primary: {
-					DEFAULT: '#11706D', // Updated to match logo teal
+					DEFAULT: '#6BA8A9', // Teal
 					foreground: '#ffffff'
 				},
 				secondary: {
-					DEFAULT: '#D4AF37', // New gold color for premium feel
+					DEFAULT: '#FF9E7D', // Coral
 					foreground: '#343434'
 				},
 				destructive: {
